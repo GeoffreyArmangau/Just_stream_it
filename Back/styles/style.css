@@ -1,0 +1,19 @@
+body {
+  font-family: 'oswald', sans-serif;
+  font-size: 1em;
+  background-color: #FFFFFF;
+}
+
+h2, h3 {
+    font-weight: 600;
+    font-style: semibold;
+    font-size: 48px;
+    line-height: 100%;
+}
+
+p {
+    font-weight: 200;
+    font-style: extralight;
+    font-size: 28px;
+    line-height: 100%;
+}
