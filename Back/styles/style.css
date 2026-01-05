@@ -1,19 +1,121 @@
 body {
   font-family: 'oswald', sans-serif;
-  font-size: 1em;
-  background-color: #FFFFFF;
 }
 
-h2, h3 {
+h1 {
     font-weight: 600;
-    font-style: semibold;
     font-size: 48px;
     line-height: 100%;
 }
 
 p {
     font-weight: 200;
-    font-style: extralight;
     font-size: 28px;
     line-height: 100%;
+}
+
+span {
+  background-color: #2D2C2C;
+  border-radius: 25px 25px 25px 25px;
+  width: 81px;
+  height: 25px;
+}
+
+header {
+  background-color: #61787F;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  /* height: 122px; */
+  /* line-height: 122px; */
+  font-weight: 300;
+  font-size: 40px;
+}
+
+.logo {
+    Width: 127px;
+    Height: 94px;
+    margin-right: 50px;
+}
+
+.btn {
+    color: rgb(255, 255, 255);
+    border-radius: 25px 25px 25px 25px;
+    background-color: #FA0B0B;
+    padding: 2px 4px 2px 4px;
+    width: 166px;
+    height: 68px;
+}
+
+.square-best-film {
+    display: flex;
+    flex-direction: row;
+    border: black 6px solid;
+}
+
+.best-film-image {
+    width: 20%;
+    height: auto;
+    padding: 8px 32px 8px 16px;
+}
+
+.best-film-txt {
+    width: 80%;
+    height: auto;
+}
+
+.bouton {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.film-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 16px;
+}
+.link-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.photo-hover-top-left, .photo-hover-bottom-right {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  right: 0;
+  bottom: 0%;
+  display: flex;
+  font-size: 1.5em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.photo-hover-top-left {
+  top: 10%;
+  left: 0%;
+  width: 100%;
+  height: 26%;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.photo-hover-bottom-right {
+  bottom: 40%;
+  right: 0%;
+  width: 100%;
+  top: 36%;
+  height: 26%;
+  align-items: flex-end;
+  justify-content: flex-end;
+
+}
+
+.link-content:hover .photo-hover-top-left, .link-content:hover .photo-hover-bottom-right {
+  display: flex;
 }
