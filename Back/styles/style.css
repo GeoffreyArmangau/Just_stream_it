@@ -39,13 +39,16 @@ header {
     margin-right: 50px;
 }
 
-.btn {
+.button {
     color: rgb(255, 255, 255);
     border-radius: 25px 25px 25px 25px;
     background-color: #FA0B0B;
     padding: 2px 4px 2px 4px;
     width: 166px;
     height: 68px;
+    align-content: center;
+    justify-content: center;
+    text-decoration: none;
 }
 
 .square-best-film {
@@ -65,7 +68,7 @@ header {
     height: auto;
 }
 
-.bouton {
+.rigtht-layout {
     display: flex;
     justify-content: flex-end;
 }
