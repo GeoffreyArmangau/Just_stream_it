@@ -1,8 +1,8 @@
 body {
-  font-family: 'oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
 }
 
-h1 {
+/* h1 {
     font-weight: 600;
     font-size: 48px;
     line-height: 100%;
@@ -19,6 +19,10 @@ span {
   border-radius: 25px 25px 25px 25px;
   width: 81px;
   height: 25px;
+} */
+p {
+    font-weight: 200;
+    /* font-size: 28px; */
 }
 
 header {
@@ -40,39 +44,38 @@ header {
 }
 
 .button {
-    color: rgb(255, 255, 255);
-    border-radius: 25px 25px 25px 25px;
+    display: block;
+    text-decoration: none;
     background-color: #FA0B0B;
-    padding: 2px 4px 2px 4px;
+    color: white;
     width: 166px;
     height: 68px;
+    text-align: center;
     align-content: center;
-    justify-content: center;
-    text-decoration: none;
+    font-weight: 500;
+    font-size: 24px;
+    border-radius: 25px;
 }
 
 .square-best-film {
-    display: flex;
-    flex-direction: row;
     border: black 6px solid;
-}
-
-.best-film-image {
-    width: 20%;
-    height: auto;
-    padding: 8px 32px 8px 16px;
+    padding: 8px 16px;
+    display: flex;
+    align-content: flex-start;
+    gap: 16px;
 }
 
 .best-film-txt {
-    width: 80%;
-    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
 }
 
-.rigtht-layout {
+.right-layout {
     display: flex;
     justify-content: flex-end;
 }
-
+/* 
 .film-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -121,4 +124,4 @@ header {
 
 .link-content:hover .photo-hover-top-left, .link-content:hover .photo-hover-bottom-right {
   display: flex;
-}
+} */
