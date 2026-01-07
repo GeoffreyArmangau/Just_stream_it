@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <script src="../../Front/API.js" defer></script>
+    <!-- <script src="../../Front/test.js" defer></script> -->
 </head>
 <body>
     <header>
@@ -30,12 +32,12 @@
             </div>
         </section>
         <section>
-            <h1>Films les mieux notés</h1>
-                <div class="film-grid">
-                    <div class="film">
+            <h1 id="best-rated-film">Films les mieux notés</h1>
+                <div class="film-grid"></div>
+                    <!-- <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=2" alt="Film 1" >
                         <div class="hover">
-                            <h3>Gigantic</h3>
+                            <h3>Film name</h3>
                             <div class="right-layout">
                                 <a href="" class="button">Détails</a>
                             </div>
@@ -44,7 +46,7 @@
                     <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=2" alt="Film 1" >
                         <div class="hover">
-                            <h3>Gigantic</h3>
+                            <h3>Film name</h3>
                             <div class="right-layout">
                                 <a href="" class="button">Détails</a>
                             </div>
@@ -53,7 +55,7 @@
                     <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=2" alt="Film 3" >
                         <div class="hover">
-                            <h3>Gigantic</h3>
+                            <h3>Film name</h3>
                             <div class="right-layout">
                                 <a href="" class="button">Détails</a>
                             </div>
@@ -62,7 +64,7 @@
                     <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=2" alt="Film 4" >
                         <div class="hover">
-                            <h3>Gigantic</h3>
+                            <h3>Film name</h3>
                             <div class="right-layout">
                                 <a href="" class="button">Détails</a>
                             </div>
@@ -71,7 +73,7 @@
                     <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=2" alt="Film 5" >
                         <div class="hover">
-                            <h3>Gigantic</h3>
+                            <h3>Film name</h3>
                             <div class="right-layout">
                                 <a href="" class="button">Détails</a>
                             </div>
@@ -80,106 +82,142 @@
                     <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=2" alt="Film 6" >
                         <div class="hover">
-                            <h3>Gigantic</h3>
+                            <h3>Film name</h3>
                             <div class="right-layout">
                                 <a href="" class="button">Détails</a>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
         </section>
-        <!-- <section>
-            <h1>Mystery</h1>
-                <div class="film-grid">
-                    <a href="https://picsum.photos/200/300/?blur=3" class="link-content">
+        <section>
+            <h1 data-genre="Mystery">Mystery</h1>
+                <div class="film-grid"></div>
+                    <!-- <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=3" alt="Film 1" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300/?blur=3" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=3" alt="Film 2" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300/?blur=3" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=3" alt="Film 3" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300/?blur=3" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=3" alt="Film 4" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>    
-                    </a>
-                    <a href="https://picsum.photos/200/300/?blur=3" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=3" alt="Film 5" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300/?blur=3" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300/?blur=3" alt="Film 6" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                </div>
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
         </section>
         <section>
-            <h1>Catégorie 2</h1>
-                <div class="film-grid">
-                    <a href="https://picsum.photos/200/300?grayscale" class="link-content">
+            <h1 data-genre="Documentary">Documentary</h1>
+                <div class="film-grid"></div>
+                    <!-- <div class="film">
                         <img src="https://picsum.photos/200/300?grayscale" alt="Film 1" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300?grayscale" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300?grayscale" alt="Film 2" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300?grayscale" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300?grayscale" alt="Film 3" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300?grayscale" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300?grayscale" alt="Film 4" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300?grayscale" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300?grayscale" alt="Film 5" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                    <a href="https://picsum.photos/200/300?grayscale" class="link-content">
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="film">
                         <img src="https://picsum.photos/200/300?grayscale" alt="Film 6" >
-                        <div class="photo-hover-top-left">Voir film</div>
-                        <div class="photo-hover-bottom-right"> Détails</div>
-                    </a>
-                </div>
-        </section> -->
+                        <div class="hover">
+                            <h3>Film name</h3>
+                            <div class="right-layout">
+                                <a href="" class="button">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+        </section>
         <section>
-            <h1>Autres</h1>
-                    <select id="film-selection">
-                    <option value="Films d'action">Films d'action</option>
-                    <option value="Comédies">Comédies</option>
-                    <option value="Famille">Famille</option>
-                    <option value="Films de fantasy">Films de fantasy</option>
-                    <option value="Films d'horreur">Films d'horreur</option>
-                    <option value="Science-fiction">Science-fiction</option>   
-                    <option value="Westerns">Westerns</option>
+            <h1 id="autres-1">Autres</h1>
+                <select id="film-selection-1">
+                    <option value="">-- Choisir un genre --</option>
                 </select>
         </section>
         <section>
-            <h1>Autres</h1>
-                <select id="film-selection">
-                    <option value="Films d'action">Films d'action</option>
-                    <option value="Comédies">Comédies</option>
-                    <option value="Famille">Famille</option>
-                    <option value="Films de fantasy">Films de fantasy</option>
-                    <option value="Films d'horreur">Films d'horreur</option>
-                    <option value="Science-fiction">Science-fiction</option>   
-                    <option value="Westerns">Westerns</option>
+            <h1 id="autres-2">Autres</h1>
+                <select id="film-selection-2">
+                    <option value="">-- Choisir un genre --</option>
                 </select>
         </section>
     </main>
