@@ -19,12 +19,10 @@
         <section>
             <h1>Meilleur film</h1>
             <div class="square-best-film">
-                <img src="https://picsum.photos/200/300/?blur" alt="Meilleur film" >
+                <img src="" alt="Meilleur film" >
                 <div class="best-film-txt">
-                    <h1>The big Lebowski</h1>
-                    <p class="content">
-                    Jeff "The Dude" Lebowski, mistaken for a millionaire of the same name, seeks restitution for his ruined rug and enlists his bowling buddies to help get it.
-                    </p>
+                    <h1 class="best-film-title"></h1>
+                    <p class="best-film-content">
                     <div class="right-layout">
                         <a href="détail1.html" class="button">Détails</a>
                     </div>
@@ -209,22 +207,35 @@
                 </div> -->
         </section>
         <section>
-            <h1 data-genre="autres-1" id="autres-1">Autres</h1>
-                <select id="film-selection-1">
-                    <option value="">-- Choisir un genre --</option>
-                </select>
-                <div class="film-grid"></div>
+            <div class="line-selector">
+                <h1 data-genre="autres-1" id="autres-1">Autres</h1>
+                    <select id="film-selection-1">
+                        <option value="">-- Choisir un genre --</option>
+                    </select>
+            </div>
+            <div class="film-grid"></div>
         </section>
         <section>
-            <h1 data-genre="autres-2" id="autres-2">Autres</h1>
-                <select id="film-selection-2">
-                    <option value="">-- Choisir un genre --</option>
-                </select>
-                <div class="film-grid"></div>
+            <div class="line-selector">
+                <h1 data-genre="autres-2" id="autres-2">Autres</h1>
+                    <select id="film-selection-2">
+                        <option value="">-- Choisir un genre --</option>
+                    </select>
+            </div>
+            <div class="film-grid"></div>
+        </section>
+        <section>
+            <div id="modal-detail" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h2 class="modal-film-title"></h2>
+                    <p class="modal-film-description"></p>
+                </div>
+            </div>            
         </section>
     </main>
     <footer>
-        <p>Vidéos à la demande - 2024</p> 
+        <p>Just Stream It - Vidéos à la demande - 2026</p> 
     </footer>
 </body>
 </html>
