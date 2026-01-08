@@ -1,4 +1,7 @@
-// Exemple d'appel à une API REST avec fetch
+const API_URL = 'http://localhost:8000/api/v1/titles/';
+
+
+// Fonction pour charger tous les genres et les ajouter aux selects
 async function chargerTousLesGenres() {
   try {
     let url = 'http://localhost:8000/api/v1/genres';
@@ -59,8 +62,6 @@ function addGenreListener(selectId, h1Id, gridSelector) {
 addGenreListener('film-selection-1', 'autres-1');
 addGenreListener('film-selection-2', 'autres-2');
 
-const API_URL = 'http://localhost:8000/api/v1/titles/';
-
 
 async function afficherMeilleurFilm() {
     try {
@@ -110,7 +111,12 @@ async function afficherMeilleurFilm() {
         img.alt = bestFilm.title;
         titre.textContent = bestFilm.title;
         synopsis.textContent = description || bestFilm.title;
-        detailsBtn.href = `../../Back/HTML/detail.html?id=${bestFilm.id}`;
+        detailsBtn.href = '#';
+        detailsBtn.setAttribute('data-film-id', bestFilm.id);
+        detailsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            afficherModalFilm(bestFilm.id);
+        });
     } catch (error) {
         console.error('Erreur chargement meilleur film:', error);
     }
@@ -144,7 +150,7 @@ async function afficherFilmsParGenre(genre, grid) {
                 <div class="hover">
                     <h3>${movie.title}</h3>
                     <div class="right-layout">
-                        <a href="../../Back/HTML/detail.html?id=${movie.id}" class="button">Détails</a>
+                        <a href="#" class="button" data-film-id="${movie.id}">Détails</a>
                     </div>
                 </div>
             `;
@@ -198,6 +204,7 @@ async function afficherMeilleursFilms() {
             grid.innerHTML = `<p>Aucun film trouvé.</p>`;
             return;
         }
+        films.sort((a, b) => parseFloat(b.imdb_score) - parseFloat(a.imdb_score));
         films.forEach(movie => {
             const filmDiv = document.createElement('div');
             filmDiv.className = 'film';
@@ -206,7 +213,7 @@ async function afficherMeilleursFilms() {
                 <div class="hover">
                     <h3>${movie.title}</h3>
                     <div class="right-layout">
-                        <a href="../../Back/HTML/detail.html?id=${movie.id}" class="button">Détails</a>
+                        <a href="#" class="button" data-film-id="${movie.id}">Détails</a>
                     </div>
                 </div>
             `;
@@ -217,13 +224,94 @@ async function afficherMeilleursFilms() {
     }
 }
 
-// Fonction pour afficher les détails du film dans la page détail
-async function afficherDetailsFilm() {
+
+// Fonction pour afficher le modal avec les infos du film
+async function afficherModalFilm(filmId) {
+    const modal = document.getElementById('modal-detail');
+    if (!modal) return;
+    modal.style.display = 'block';
+    const titre = modal.querySelector('.modal-film-title');
+    const infos = modal.querySelector('.modal-film-infos');
+    const synopsis = modal.querySelector('.modal-film-synopsis');
+    const distribution = modal.querySelector('.modal-film-distribution');
+    const image = modal.querySelector('.modal-film-image');
+    titre.textContent = '';
+    infos.textContent = '';
+    synopsis.textContent = '';
+    distribution.textContent = '';
+    image.src = '';
+    image.alt = '';
+    const url = `http://localhost:8000/api/v1/titles/${filmId}`;
+    try {
+        const response = await fetch(url);
+        const film = await response.json();
+        titre.textContent = film.title;
+        infos.innerHTML =
+            `Année : ${film.year || 'N/A'}<br>` +
+            `Genres : ${(film.genres || []).join(', ')}<br>` +
+            `Durée : ${film.duration ? film.duration + ' minutes' : 'N/A'}<br>` +
+            `IMDB score : ${film.imdb_score ? film.imdb_score + '/10' : 'N/A'}<br>` +
+            (film.worldwide_gross_income ? `Recettes au box-office : ${film.worldwide_gross_income}<br>` : '') +
+            (film.directors ? `Réalisé par : ${(film.directors || []).join(', ')}` : '');
+        synopsis.textContent = film.long_description || film.description || '';
+        distribution.textContent = film.actors ? `Distribution : ${(film.actors || []).join(', ')}` : '';
+        image.src = film.image_url || '';
+        image.alt = film.title;
+    } catch (e) {
+        titre.textContent = 'Film introuvable';
+        infos.textContent = '';
+        synopsis.textContent = '';
+        distribution.textContent = '';
+        image.src = '';
+        image.alt = '';
+    }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+// Intercepte le clic sur tous les boutons Détails
+function activerModalsFilms() {
+    document.querySelectorAll('a.button[data-film-id]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const filmId = btn.getAttribute('data-film-id');
+            if (filmId) afficherModalFilm(filmId);
+        });
+    });
+    // Ajoute le bouton fermer
+    const closeBtn = document.getElementById('close-modal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            document.getElementById('modal-detail').style.display = 'none';
+        });
+    }
+    // Ajoute aussi la croix
+    const crossBtn = document.querySelector('#modal-detail .close-button');
+    if (crossBtn) {
+        crossBtn.addEventListener('click', function() {
+            document.getElementById('modal-detail').style.display = 'none';
+        });
+    }
+}
+
+
+function ajouterDataFilmIdDansGrilles() {
+    document.querySelectorAll('.film-grid .film a.button').forEach(a => {
+        const href = a.getAttribute('href');
+        const match = href && href.match(/id=(\d+)/);
+        if (match) {
+            a.setAttribute('data-film-id', match[1]);
+        }
+    });
+}
+
+
+async function affichageComplet() {
     await afficherMeilleurFilm();
     await afficherMeilleursFilms();
     await afficherToutesLesSectionsParGenre();
-});
+    ajouterDataFilmIdDansGrilles();
+    activerModalsFilms();
+}
+
+
+document.addEventListener('DOMContentLoaded', affichageComplet);
 

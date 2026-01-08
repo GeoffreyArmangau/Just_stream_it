@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-    <!-- <script src="../../Front/API.js" defer></script> -->
-    <script src="../../Front/test.js" defer></script>
+    <!-- <script src="../JS/API.js" defer></script> -->
+    <script src="../JS/test.js" defer></script>
 </head>
 <body>
     <header>
@@ -24,7 +24,7 @@
                     <h1 class="best-film-title"></h1>
                     <p class="best-film-content">
                     <div class="right-layout">
-                        <a href="détail1.html" class="button">Détails</a>
+                        <a href="" class="button">Détails</a>
                     </div>
                 </div>
             </div>
@@ -227,9 +227,17 @@
         <section>
             <div id="modal-detail" class="modal">
                 <div class="modal-content">
-                    <span class="close-button">&times;</span>
-                    <h2 class="modal-film-title"></h2>
-                    <p class="modal-film-description"></p>
+                  <div class="modal-row">
+                    <div class="modal-infos">
+                      <h1 class="modal-film-title"></h1>
+                      <h2 class="modal-film-infos"></h2>
+                    </div>
+                    <div class="modal-image">
+                      <img class="modal-film-image" src="" alt="Image du film">
+                    </div>
+                  </div>
+                  <p class="modal-film-synopsis"></p>
+                  <p class="modal-film-distribution"></p>
                 </div>
             </div>            
         </section>
