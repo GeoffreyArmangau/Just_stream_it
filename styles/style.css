@@ -17,7 +17,6 @@ h3 {
 
 p {
     font-weight: 200;
-    /* font-size: 28px; */
 }
 
 header {
@@ -26,16 +25,14 @@ header {
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  /* height: 122px; */
-  /* line-height: 122px; */
   font-weight: 300;
   font-size: 40px;
 }
 
 /* mise en forme de l'en-tete */
 .logo {
-    Width: 127px;
-    Height: 94px;
+    width: 127px;
+    height: 94px;
     /* margin-right: 50px; */
 }
 
@@ -187,56 +184,85 @@ header {
 
 .modal-content {
   border: #2D2C2C 6px solid;
-
   background-color: #fefefe;
   margin: 15% auto; 
-  padding: 0px 20px;
-  border: 1px solid #888;
+  padding: 20px 20px;
   width: 80%; 
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  grid-template-rows: repeat(4, auto) auto auto auto auto;
+  gap: 16px 32px;
 }
 
-.modal-row {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
+.modal-film-title { 
+    grid-column: 1;
+    grid-row: 1; 
+    align-self: 
+    start; 
 }
 
-.modal-infos {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+.modal-film-infos {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+}
+
+.realisation-txt {
+    grid-column: 1;
+    grid-row: 3;
+    align-self:
+    start;
+}
+
+.realisation {
+    grid-column: 1;
+    grid-row: 4;
+    align-self:
+    start;
+}
+
+.modal-image {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: start;
+    justify-self: end;
+    display: flex;
+    align-items:
+    flex-start;
 }
 
 .modal-image img {
-  width: 300px;
-  height: 450px;
-  object-fit: cover;
+    width: 300px;
+    height: 450px;
+    object-fit: cover;
 }
 
-.modal-content p {
-  width: 100%;
-  margin: 0;
+.modal-film-synopsis {
+    grid-column: 1 / span 2;
+    grid-row: 5;
 }
 
-.modal-content a{
-    margin-top: 16px;
-    margin-bottom: 16px;
-    align-self: center;
-  }
-
-.modal-footer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-  margin-bottom: 8px;
+.distribution-txt {
+    grid-column: 1 / span 2;
+    grid-row: 6; margin-top: 16px;
 }
 
-/* MEDIA QUERIES MOBILE */
+.modal-film-distribution {
+    grid-column: 1 / span 2;
+    grid-row: 7;
+}
+
+#close-modal {
+    grid-column: 1 / span 2;
+    grid-row: 8;
+    margin: 24px auto 0 auto;
+    position: static;
+    width: 214px;
+    height: 36px;
+    font-size: 1.2rem;
+}
+
+/* Media queries pour mobile */
 @media (max-width: 600px) {
   /* Meilleur film en colonne */
   .square-best-film {
@@ -280,42 +306,165 @@ header {
   }
 
   .modal-content {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-/* MEDIA QUERIES MODAL TABLETTE */
-@media (max-width: 900px) and (min-width: 601px) {
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 36px;
+    gap: 12px;
     align-items: stretch;
     position: relative;
-    padding-top: 48px;
+    padding: 48px 16px 16px 16px;
+    margin-top: 16px;
   }
+
   .modal-row {
     flex-direction: column;
     gap: 0;
     align-items: stretch;
   }
+
   .modal-infos {
     order: 1;
     align-items: flex-start;
     text-align: left;
   }
-  .modal-film-title { order: 1; }
-  .modal-film-infos { order: 2; }
-  .modal-infos h3 { order: 3; }
-  .realisation { order: 4; }
-  .modal-film-synopsis { order: 5; }
-  .modal-image { order: 6; display: flex; justify-content: center; margin: 12px 0; }
-  .modal-image img { width: 40vw; max-width: 220px; height: auto; }
-  .modal-content h3 { margin-top: 16px; }
-  .modal-content > h3 { order: 7; }
-  .modal-film-distribution { order: 8; }
-  #close-modal {
+
+  .modal-film-title {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .modal-film-infos {
+    grid-column: 1 / 3;
+    grid-row: 2;
+  }
+  
+  .modal-infos .realisation-txt {
+    grid-column: 1 / 3;
+    grid-row: 3;
+  }
+  .realisation {
+    grid-column: 1 / 3;
+    grid-row: 4;
+  }
+  .modal-film-synopsis {
+    grid-column: 1 / 3;
+    grid-row: 5;
+  }
+  .modal-image {
+    grid-column: 1 / 3;
+    grid-row: 6;
+    display: flex;
+    justify-content: center;
+    margin: 12px 0;
+  }
+
+  .modal-content .distribution-txt {
+    grid-column: 1 / 3;
+    grid-row: 7;
+  }
+  .modal-film-distribution {
+    grid-column: 1 / 3;
+    grid-row: 8;
+  }
+}
+
+/* Media queries pour tablette */
+@media (max-width: 900px) and (min-width: 601px) {
+    /* Meilleur film : disposition web mais plus petit */
+  .square-best-film {
+    gap: 12px;
+  }
+
+  .square-best-film img {
+    width: 220px;
+    height: 330px;
+  }
+
+  .best-film-txt {
+    font-size: 90%;
+  }
+
+  .best-film-txt .best-film-content {
+    white-space: normal;
+    word-break: break-word;
+    font-size: 1em;
+    line-height: 1.3em;
+  }
+
+  /* Grilles : 2 colonnes */
+  .film-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-right: 2px;
+  }
+  
+  .film {
+    margin-right: 0;
+  }
+
+    .modal-content {
+    display: grid;
+    grid-template-columns: 1fr 36px;
+    gap: 12px;
+    align-items: stretch;
+    position: relative;
+    padding: 48px 16px 16px 16px;
+    margin-top: 16px;
+  }
+
+  .modal-row {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .modal-infos {
+    order: 1;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .modal-film-title {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .modal-film-infos {
+    grid-column: 1 / 3;
+    grid-row: 2;
+  }
+  
+  .modal-infos .realisation-txt {
+    grid-column: 1 / 3;
+    grid-row: 3;
+  }
+  .realisation {
+    grid-column: 1 / 3;
+    grid-row: 4;
+  }
+  .modal-film-synopsis {
+    grid-column: 1 / 3;
+    grid-row: 5;
+  }
+  .modal-image {
+    grid-column: 1 / 3;
+    grid-row: 6;
+    display: flex;
+    justify-content: center;
+    margin: 12px 0;
+  }
+
+  .modal-content .distribution-txt {
+    grid-column: 1 / 3;
+    grid-row: 7;
+  }
+  .modal-film-distribution {
+    grid-column: 1 / 3;
+    grid-row: 8;
+  }
+}
+  /* #close-modal {
     position: absolute;
     top: 12px;
     right: 16px;
@@ -336,6 +485,7 @@ header {
     text-align: center;
     padding: 0;
   }
+
   #close-modal::after {
     content: '\00d7';
     font-size: 2.2rem;
@@ -344,49 +494,6 @@ header {
     font-weight: bold;
     pointer-events: none;
   }
+
   #close-modal span { display: none; }
-}
-
-
-
-/* MEDIA QUERIES TABLETTE */
-@media (max-width: 900px) and (min-width: 601px) {
-  /* Meilleur film : disposition web mais plus petit */
-  .square-best-film {
-    gap: 12px;
-  }
-  .square-best-film img {
-    width: 220px;
-    height: 330px;
-  }
-  .best-film-txt {
-    font-size: 90%;
-  }
-  .best-film-txt .best-film-content {
-    white-space: normal;
-    word-break: break-word;
-    font-size: 1em;
-    line-height: 1.3em;
-  }
-  /* Grilles : 2 colonnes */
-  .film-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-right: 2px;
-  }
-  .film {
-    margin-right: 0;
-  }
-}
-
-/* .modal-content-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-.modal-content- img {
-    display: block
-    inline-block
 } */

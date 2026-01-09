@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api/v1/titles/';
+const apiTitles = 'http://localhost:8000/api/v1/titles/';
 
 
 // Fonction pour charger tous les genres et les ajouter aux selects
@@ -72,7 +72,7 @@ async function afficherMeilleurFilm() {
         const synopsis = section.querySelector('.best-film-txt .best-film-content');
         const detailsBtn = section.querySelector('.right-layout a');
 
-        let url = API_URL;
+        let url = apiTitles;
         let bestFilm = null;
         let bestScore = -Infinity;
         let pageCount = 0;
@@ -126,7 +126,7 @@ async function afficherMeilleurFilm() {
 // Fonction pour afficher les films d'un genre donné dans la grid correspondante
 async function afficherFilmsParGenre(genre, grid) {
     try {
-        let url = `${API_URL}?genre=${encodeURIComponent(genre)}`;
+        let url = `${apiTitles}?genre=${encodeURIComponent(genre)}`;
         let films = [];
         let pageCount = 0;
         const maxPages = 10;
@@ -184,7 +184,7 @@ async function afficherMeilleursFilms() {
         const grid = section.nextElementSibling;
         if (!grid || !grid.classList.contains('film-grid')) return;
         grid.innerHTML = '';
-        let url = API_URL;
+        let url = apiTitles;
         let films = [];
         let pageCount = 0;
         const maxPages = 50;
@@ -270,7 +270,7 @@ async function afficherModalFilm(filmId) {
     }
 }
 
-// Intercepte le clic sur tous les boutons Détails
+// Active le clic sur tous les boutons Détails
 function activerModalsFilms() {
     document.querySelectorAll('a.button[data-film-id]').forEach(btn => {
         btn.addEventListener('click', function(e) {
