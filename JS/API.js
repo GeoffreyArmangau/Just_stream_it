@@ -282,7 +282,8 @@ function activerModalsFilms() {
     // Ajoute le bouton fermer
     const closeBtn = document.getElementById('close-modal');
     if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             document.getElementById('modal-detail').style.display = 'none';
         });
     }

@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8" >
-    <link href="../styles/style.css" rel="stylesheet" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../styles/test.css" rel="stylesheet" >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
@@ -229,20 +230,20 @@
             <div id="modal-detail" class="modal">
                 <div class="modal-content">
                     <div class="modal-row">
-                    <div class="modal-infos">
-                        <h1 class="modal-film-title">Film title</h1>
-                        <h2 class="modal-film-infos">Film information</h2>
-                        <h3>Réalisé par:</h3>
-                        <p class="realisation"></p>
+                        <div class="modal-infos">
+                            <h1 class="modal-film-title">Film title</h1>
+                            <h2 class="modal-film-infos">Film information</h2>
+                            <h3>Réalisé par:</h3>
+                            <p class="realisation"></p>
+                        </div>
+                        <p class="modal-film-synopsis"></p>
+                        <div class="modal-image">
+                            <img class="modal-film-image" src="../images/image-not-found.png" alt="Image du film">
+                        </div>
                     </div>
-                    <div class="modal-image">
-                      <img class="modal-film-image" src="../images/image-not-found.png" alt="Image du film">
-                    </div>
-                  </div>
-                  <p class="modal-film-synopsis"></p>
-                  <h3>Avec :</h3>
-                  <p class="modal-film-distribution"></p>
-                  <a href="#" id="close-modal" class="button">Fermer</a>
+                    <h3>Avec :</h3>
+                    <p class="modal-film-distribution"></p>
+                    <button id="close-modal" class="button" aria-label="Fermer le modal"><span>Fermer</span></button>
                 </div>
             </div>            
         </section>
