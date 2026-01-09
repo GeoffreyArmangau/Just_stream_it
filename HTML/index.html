@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <!-- <script src="../JS/API.js" defer></script> -->
     <script src="../JS/test.js" defer></script>
+    <title>Just Stream It - Accueil</title>
 </head>
 <body>
     <header>
@@ -19,9 +20,9 @@
         <section>
             <h1>Meilleur film</h1>
             <div class="square-best-film">
-                <img src="" alt="Meilleur film" >
+                <img src="../images/image-not-found.png" alt="Meilleur film" >
                 <div class="best-film-txt">
-                    <h1 class="best-film-title"></h1>
+                    <h1 class="best-film-title">best film title</h1>
                     <p class="best-film-content">
                     <div class="right-layout">
                         <a href="" class="button">Détails</a>
@@ -227,17 +228,21 @@
         <section>
             <div id="modal-detail" class="modal">
                 <div class="modal-content">
-                  <div class="modal-row">
+                    <div class="modal-row">
                     <div class="modal-infos">
-                      <h1 class="modal-film-title"></h1>
-                      <h2 class="modal-film-infos"></h2>
+                        <h1 class="modal-film-title">Film title</h1>
+                        <h2 class="modal-film-infos">Film information</h2>
+                        <h3>Réalisé par:</h3>
+                        <p class="realisation"></p>
                     </div>
                     <div class="modal-image">
-                      <img class="modal-film-image" src="" alt="Image du film">
+                      <img class="modal-film-image" src="../images/image-not-found.png" alt="Image du film">
                     </div>
                   </div>
                   <p class="modal-film-synopsis"></p>
+                  <h3>Avec :</h3>
                   <p class="modal-film-distribution"></p>
+                  <a href="#" id="close-modal" class="button">Fermer</a>
                 </div>
             </div>            
         </section>

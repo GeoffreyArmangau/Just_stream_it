@@ -1,3 +1,12 @@
+/* Pied du modal pour centrer le bouton fermer */
+.modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
 /* mise en forme des balises globales*/
 body {
   font-family: "Oswald", sans-serif;
@@ -7,6 +16,12 @@ h1 {
     font-weight: 600;
     font-size: 48px;
     line-height: 100%;
+}
+
+h3 {
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 0px;
 }
 
 p {
@@ -179,10 +194,10 @@ header {
   border: #2D2C2C 6px solid;
 
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  margin: 15% auto; 
+  padding: 0px 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%; 
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -208,7 +223,15 @@ header {
 
 .modal-content p {
   width: 100%;
+  margin: 0;
 }
+
+.modal-content a{
+    margin-top: 16px;
+    margin-bottom: 16px;
+    align-self: center;
+  }
+
 
 /* .modal-content-header {
     display: flex;

@@ -234,11 +234,13 @@ async function afficherModalFilm(filmId) {
     const infos = modal.querySelector('.modal-film-infos');
     const synopsis = modal.querySelector('.modal-film-synopsis');
     const distribution = modal.querySelector('.modal-film-distribution');
+    const realisation = modal.querySelector('.realisation');
     const image = modal.querySelector('.modal-film-image');
     titre.textContent = '';
     infos.textContent = '';
     synopsis.textContent = '';
     distribution.textContent = '';
+    realisation.textContent = '';
     image.src = '';
     image.alt = '';
     const url = `http://localhost:8000/api/v1/titles/${filmId}`;
@@ -251,10 +253,10 @@ async function afficherModalFilm(filmId) {
             `Genres : ${(film.genres || []).join(', ')}<br>` +
             `Durée : ${film.duration ? film.duration + ' minutes' : 'N/A'}<br>` +
             `IMDB score : ${film.imdb_score ? film.imdb_score + '/10' : 'N/A'}<br>` +
-            (film.worldwide_gross_income ? `Recettes au box-office : ${film.worldwide_gross_income}<br>` : '') +
-            (film.directors ? `Réalisé par : ${(film.directors || []).join(', ')}` : '');
+            (film.worldwide_gross_income ? `Recettes au box-office : ${film.worldwide_gross_income}<br>` : '');
+        realisation.textContent = film.directors ? `${(film.directors || []).join(', ')}` : '';
         synopsis.textContent = film.long_description || film.description || '';
-        distribution.textContent = film.actors ? `Distribution : ${(film.actors || []).join(', ')}` : '';
+        distribution.textContent = film.actors ? `${(film.actors || []).join(', ')}` : '';
         image.src = film.image_url || '';
         image.alt = film.title;
     } catch (e) {
@@ -262,6 +264,7 @@ async function afficherModalFilm(filmId) {
         infos.textContent = '';
         synopsis.textContent = '';
         distribution.textContent = '';
+        realisation.textContent = '';
         image.src = '';
         image.alt = '';
     }
