@@ -1,3 +1,68 @@
+// Fonction utilitaire pour déterminer le nombre de films visibles selon la taille d'écran
+function getNbFilmsVisibles() {
+    if (window.innerWidth <= 600) return 2; // mobile
+    if (window.innerWidth <= 900) return 4; // tablette
+    return 6; // desktop
+}
+
+
+// Fonction pour masquer les films et gérer les boutons Voir plus / Voir moins
+function appliquerVoirPlus(grid) {
+    const films = Array.from(grid.querySelectorAll('.film'));
+    const nbVisibles = getNbFilmsVisibles();
+    let voirPlusBtn = grid.nextElementSibling;
+    if (!voirPlusBtn || !voirPlusBtn.classList.contains('voir-plus')) {
+        voirPlusBtn = document.createElement('button');
+        voirPlusBtn.className = 'voir-plus button';
+        voirPlusBtn.textContent = 'Voir plus';
+        grid.parentNode.insertBefore(voirPlusBtn, grid.nextSibling);
+    }
+
+    // État du bouton : voir plus ou voir moins ?
+    let etat = voirPlusBtn.getAttribute('data-etat') || 'plus';
+
+    function afficherRestreint() {
+        films.forEach((film, idx) => {
+            if (idx < nbVisibles) {
+                film.classList.remove('film-cache');
+            } else {
+                film.classList.add('film-cache');
+            }
+        });
+        voirPlusBtn.textContent = 'Voir plus';
+        voirPlusBtn.setAttribute('data-etat', 'plus');
+        voirPlusBtn.style.display = films.length > nbVisibles ? 'block' : 'none';
+    }
+
+    function afficherTout() {
+        films.forEach(film => film.classList.remove('film-cache'));
+        voirPlusBtn.textContent = 'Voir moins';
+        voirPlusBtn.setAttribute('data-etat', 'moins');
+        voirPlusBtn.style.display = 'block';
+    }
+
+    // Applique l'état initial
+    if (etat === 'moins') {
+        afficherTout();
+    } else {
+        afficherRestreint();
+    }
+
+    voirPlusBtn.onclick = function() {
+        if (voirPlusBtn.getAttribute('data-etat') === 'plus') {
+            afficherTout();
+        } else {
+            afficherRestreint();
+        }
+    };
+}
+
+// Réapplique le masquage lors du redimensionnement
+window.addEventListener('resize', () => {
+    document.querySelectorAll('.film-grid').forEach(grid => {
+        appliquerVoirPlus(grid);
+    });
+});
 const API_URL = 'http://localhost:8000/api/v1/titles/';
 
 
@@ -157,6 +222,7 @@ async function afficherFilmsParGenre(genre, grid) {
             `;
             grid.appendChild(filmDiv);
         });
+        appliquerVoirPlus(grid);
     } catch (error) {
         console.error(`Erreur chargement films pour le genre ${genre}:`, error);
     }
@@ -221,6 +287,7 @@ async function afficherMeilleursFilms() {
             `;
             grid.appendChild(filmDiv);
         });
+        appliquerVoirPlus(grid);
     } catch (error) {
         console.error('Erreur chargement films:', error);
     }

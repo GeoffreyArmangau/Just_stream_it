@@ -1,3 +1,8 @@
+/* Masque les films cachés */
+.film-cache {
+  display: none !important;
+}
+
 /* mise en forme des balises globales*/
 body {
   font-family: "Oswald", sans-serif;
