@@ -1,4 +1,4 @@
-const apiTitles = 'http://localhost:8000/api/v1/titles/';
+const API_URL = 'http://localhost:8000/api/v1/titles/';
 
 
 // Fonction pour charger tous les genres et les ajouter aux selects
@@ -72,7 +72,7 @@ async function afficherMeilleurFilm() {
         const synopsis = section.querySelector('.best-film-txt .best-film-content');
         const detailsBtn = section.querySelector('.right-layout a');
 
-        let url = apiTitles;
+        let url = API_URL;
         let bestFilm = null;
         let bestScore = -Infinity;
         let pageCount = 0;
@@ -126,7 +126,7 @@ async function afficherMeilleurFilm() {
 // Fonction pour afficher les films d'un genre donné dans la grid correspondante
 async function afficherFilmsParGenre(genre, grid) {
     try {
-        let url = `${apiTitles}?genre=${encodeURIComponent(genre)}`;
+        let url = `${API_URL}?genre=${encodeURIComponent(genre)}`;
         let films = [];
         let pageCount = 0;
         const maxPages = 10;
@@ -142,7 +142,8 @@ async function afficherFilmsParGenre(genre, grid) {
             grid.innerHTML = `<p>Aucun film trouvé pour ce genre.</p>`;
             return;
         }
-        films.forEach(movie => {
+        // Limite à 6 films pour chaque catégorie
+        films.slice(0, 6).forEach(movie => {
             const filmDiv = document.createElement('div');
             filmDiv.className = 'film';
             filmDiv.innerHTML = `
@@ -184,7 +185,7 @@ async function afficherMeilleursFilms() {
         const grid = section.nextElementSibling;
         if (!grid || !grid.classList.contains('film-grid')) return;
         grid.innerHTML = '';
-        let url = apiTitles;
+        let url = API_URL;
         let films = [];
         let pageCount = 0;
         const maxPages = 50;
@@ -205,7 +206,8 @@ async function afficherMeilleursFilms() {
             return;
         }
         films.sort((a, b) => parseFloat(b.imdb_score) - parseFloat(a.imdb_score));
-        films.forEach(movie => {
+        // Limite à 6 films les mieux notés
+        films.slice(0, 6).forEach(movie => {
             const filmDiv = document.createElement('div');
             filmDiv.className = 'film';
             filmDiv.innerHTML = `
@@ -270,7 +272,7 @@ async function afficherModalFilm(filmId) {
     }
 }
 
-// Active le clic sur tous les boutons Détails
+// Intercepte le clic sur tous les boutons Détails
 function activerModalsFilms() {
     document.querySelectorAll('a.button[data-film-id]').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -282,8 +284,7 @@ function activerModalsFilms() {
     // Ajoute le bouton fermer
     const closeBtn = document.getElementById('close-modal');
     if (closeBtn) {
-        closeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        closeBtn.addEventListener('click', function() {
             document.getElementById('modal-detail').style.display = 'none';
         });
     }
