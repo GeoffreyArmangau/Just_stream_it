@@ -1,68 +1,28 @@
-// Fonction utilitaire pour déterminer le nombre de films visibles selon la taille d'écran
-function getNbFilmsVisibles() {
-    if (window.innerWidth <= 600) return 2; // mobile
-    if (window.innerWidth <= 900) return 4; // tablette
-    return 6; // desktop
-}
-
-
-// Fonction pour masquer les films et gérer les boutons Voir plus / Voir moins
-function appliquerVoirPlus(grid) {
-    const films = Array.from(grid.querySelectorAll('.film'));
-    const nbVisibles = getNbFilmsVisibles();
-    let voirPlusBtn = grid.nextElementSibling;
-    if (!voirPlusBtn || !voirPlusBtn.classList.contains('voir-plus')) {
-        voirPlusBtn = document.createElement('button');
-        voirPlusBtn.className = 'voir-plus button';
-        voirPlusBtn.textContent = 'Voir plus';
-        grid.parentNode.insertBefore(voirPlusBtn, grid.nextSibling);
-    }
-
-    // État du bouton : voir plus ou voir moins ?
-    let etat = voirPlusBtn.getAttribute('data-etat') || 'plus';
-
-    function afficherRestreint() {
-        films.forEach((film, idx) => {
-            if (idx < nbVisibles) {
-                film.classList.remove('film-cache');
-            } else {
-                film.classList.add('film-cache');
-            }
-        });
-        voirPlusBtn.textContent = 'Voir plus';
-        voirPlusBtn.setAttribute('data-etat', 'plus');
-        voirPlusBtn.style.display = films.length > nbVisibles ? 'block' : 'none';
-    }
-
-    function afficherTout() {
-        films.forEach(film => film.classList.remove('film-cache'));
-        voirPlusBtn.textContent = 'Voir moins';
-        voirPlusBtn.setAttribute('data-etat', 'moins');
-        voirPlusBtn.style.display = 'block';
-    }
-
-    // Applique l'état initial
-    if (etat === 'moins') {
-        afficherTout();
-    } else {
-        afficherRestreint();
-    }
-
-    voirPlusBtn.onclick = function() {
-        if (voirPlusBtn.getAttribute('data-etat') === 'plus') {
-            afficherTout();
-        } else {
-            afficherRestreint();
+// Synchronise l'attribut data-genre avec le texte du h1 pour les sections best-rated-film-1 et best-rated-film-2
+function synchroniserDataGenreAvecTexte() {
+    const ids = ['best-rated-film-1', 'best-rated-film-2'];
+    ids.forEach(id => {
+        const h1 = document.getElementById(id);
+        if (h1) {
+            const texte = h1.textContent.trim();
+            h1.setAttribute('data-genre', texte);
         }
-    };
+    });
 }
 
-// Réapplique le masquage lors du redimensionnement
-window.addEventListener('resize', () => {
-    document.querySelectorAll('.film-grid').forEach(grid => {
-        appliquerVoirPlus(grid);
+// Surveille les changements de texte sur les h1 ciblés et synchronise data-genre
+function activerSyncDataGenre() {
+    const ids = ['best-rated-film-1', 'best-rated-film-2'];
+    ids.forEach(id => {
+        const h1 = document.getElementById(id);
+        if (h1) {
+            const observer = new MutationObserver(() => {
+                h1.setAttribute('data-genre', h1.textContent.trim());
+            });
+            observer.observe(h1, { childList: true, characterData: true, subtree: true });
+        }
     });
-});
+}
 const API_URL = 'http://localhost:8000/api/v1/titles/';
 
 
@@ -211,15 +171,36 @@ async function afficherFilmsParGenre(genre, grid) {
         films.slice(0, 6).forEach(movie => {
             const filmDiv = document.createElement('div');
             filmDiv.className = 'film';
-            filmDiv.innerHTML = `
-                <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='../images/image-not-found.png'">
-                <div class="hover">
-                    <h3>${movie.title}</h3>
-                    <div class="right-layout">
-                        <a href="#" class="button" data-film-id="${movie.id}">Détails</a>
-                    </div>
-                </div>
-            `;
+
+            const img = document.createElement('img');
+            img.src = movie.image_url;
+            img.alt = movie.title;
+            img.onerror = function() { this.src = '../images/image-not-found.png'; };
+
+            const hoverDiv = document.createElement('div');
+            hoverDiv.className = 'hover';
+
+            const h3 = document.createElement('h3');
+            h3.textContent = movie.title;
+
+            const rightLayout = document.createElement('div');
+            rightLayout.className = 'right-layout';
+
+            const detailsBtn = document.createElement('a');
+            detailsBtn.href = '#';
+            detailsBtn.className = 'button';
+            detailsBtn.setAttribute('data-film-id', movie.id);
+            detailsBtn.textContent = 'Détails';
+            detailsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherModalFilm(movie.id);
+            });
+
+            rightLayout.appendChild(detailsBtn);
+            hoverDiv.appendChild(h3);
+            hoverDiv.appendChild(rightLayout);
+            filmDiv.appendChild(img);
+            filmDiv.appendChild(hoverDiv);
             grid.appendChild(filmDiv);
         });
         appliquerVoirPlus(grid);
@@ -244,21 +225,26 @@ async function afficherToutesLesSectionsParGenre() {
 
 // Fonction pour afficher les films les mieux notés dans la section dédiée
 async function afficherMeilleursFilms() {
-    try {
-        // Sélectionne la section "Films les mieux notés"
-        const section = document.querySelector('h1#best-rated-film');
-        if (!section) return;
+    const ids = ['best-rated-film-1', 'best-rated-film-2'];
+    for (const id of ids) {
+        const section = document.getElementById(id);
+        if (!section) continue;
+        const genre = section.getAttribute('data-genre');
         const grid = section.nextElementSibling;
-        if (!grid || !grid.classList.contains('film-grid')) return;
+        if (!grid || !grid.classList.contains('film-grid')) continue;
         grid.innerHTML = '';
         let url = API_URL;
         let films = [];
         let pageCount = 0;
         const maxPages = 50;
         while (url && pageCount < maxPages) {
-            const response = await fetch(url);
+            let fetchUrl = url;
+            if (genre) {
+                const sep = fetchUrl.includes('?') ? '&' : '?';
+                fetchUrl = `${fetchUrl}${sep}genre=${encodeURIComponent(genre)}`;
+            }
+            const response = await fetch(fetchUrl);
             const data = await response.json();
-            // Filtre les films avec une note > 7
             const pageFilms = (data.results || []).filter(film => {
                 const score = parseFloat(film.imdb_score);
                 return !isNaN(score) && score > 7;
@@ -269,27 +255,45 @@ async function afficherMeilleursFilms() {
         }
         if (!films.length) {
             grid.innerHTML = `<p>Aucun film trouvé.</p>`;
-            return;
+            continue;
         }
         films.sort((a, b) => parseFloat(b.imdb_score) - parseFloat(a.imdb_score));
-        // Limite à 6 films les mieux notés
         films.slice(0, 6).forEach(movie => {
             const filmDiv = document.createElement('div');
             filmDiv.className = 'film';
-            filmDiv.innerHTML = `
-                <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='../images/image-not-found.png'">
-                <div class="hover">
-                    <h3>${movie.title}</h3>
-                    <div class="right-layout">
-                        <a href="#" class="button" data-film-id="${movie.id}">Détails</a>
-                    </div>
-                </div>
-            `;
+
+            const img = document.createElement('img');
+            img.src = movie.image_url;
+            img.alt = movie.title;
+            img.onerror = function() { this.src = '../images/image-not-found.png'; };
+
+            const hoverDiv = document.createElement('div');
+            hoverDiv.className = 'hover';
+
+            const h3 = document.createElement('h3');
+            h3.textContent = movie.title;
+
+            const rightLayout = document.createElement('div');
+            rightLayout.className = 'right-layout';
+
+            const detailsBtn = document.createElement('a');
+            detailsBtn.href = '#';
+            detailsBtn.className = 'button';
+            detailsBtn.setAttribute('data-film-id', movie.id);
+            detailsBtn.textContent = 'Détails';
+            detailsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                afficherModalFilm(movie.id);
+            });
+
+            rightLayout.appendChild(detailsBtn);
+            hoverDiv.appendChild(h3);
+            hoverDiv.appendChild(rightLayout);
+            filmDiv.appendChild(img);
+            filmDiv.appendChild(hoverDiv);
             grid.appendChild(filmDiv);
         });
         appliquerVoirPlus(grid);
-    } catch (error) {
-        console.error('Erreur chargement films:', error);
     }
 }
 
@@ -375,8 +379,75 @@ function ajouterDataFilmIdDansGrilles() {
     });
 }
 
+// Fonction utilitaire pour déterminer le nombre de films visibles selon la taille d'écran
+function getNbFilmsVisibles() {
+    if (window.innerWidth <= 600) return 2; // mobile
+    if (window.innerWidth <= 900) return 4; // tablette
+    return 6; // desktop
+}
+
+
+// Fonction pour masquer les films et gérer les boutons Voir plus / Voir moins
+function appliquerVoirPlus(grid) {
+    const films = Array.from(grid.querySelectorAll('.film'));
+    const nbVisibles = getNbFilmsVisibles();
+    let voirPlusBtn = grid.nextElementSibling;
+    if (!voirPlusBtn || !voirPlusBtn.classList.contains('voir-plus')) {
+        voirPlusBtn = document.createElement('button');
+        voirPlusBtn.className = 'voir-plus button';
+        voirPlusBtn.textContent = 'Voir plus';
+        grid.parentNode.insertBefore(voirPlusBtn, grid.nextSibling);
+    }
+
+    // État du bouton : voir plus ou voir moins ?
+    let etat = voirPlusBtn.getAttribute('data-etat') || 'plus';
+
+    function afficherRestreint() {
+        films.forEach((film, idx) => {
+            if (idx < nbVisibles) {
+                film.classList.remove('film-cache');
+            } else {
+                film.classList.add('film-cache');
+            }
+        });
+        voirPlusBtn.textContent = 'Voir plus';
+        voirPlusBtn.setAttribute('data-etat', 'plus');
+        voirPlusBtn.style.display = films.length > nbVisibles ? 'block' : 'none';
+    }
+
+    function afficherTout() {
+        films.forEach(film => film.classList.remove('film-cache'));
+        voirPlusBtn.textContent = 'Voir moins';
+        voirPlusBtn.setAttribute('data-etat', 'moins');
+        voirPlusBtn.style.display = 'block';
+    }
+
+    // Applique l'état initial
+    if (etat === 'moins') {
+        afficherTout();
+    } else {
+        afficherRestreint();
+    }
+
+    voirPlusBtn.onclick = function() {
+        if (voirPlusBtn.getAttribute('data-etat') === 'plus') {
+            afficherTout();
+        } else {
+            afficherRestreint();
+        }
+    };
+}
+
+// Réapplique le masquage lors du redimensionnement
+window.addEventListener('resize', () => {
+    document.querySelectorAll('.film-grid').forEach(grid => {
+        appliquerVoirPlus(grid);
+    });
+});
 
 async function affichageComplet() {
+    synchroniserDataGenreAvecTexte();
+    activerSyncDataGenre();
     await afficherMeilleurFilm();
     await afficherMeilleursFilms();
     await afficherToutesLesSectionsParGenre();

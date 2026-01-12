@@ -32,7 +32,7 @@
             </div>
         </section>
         <section>
-            <h1 id="best-rated-film">Films les mieux notés</h1>
+            <h1 id="best-rated-film-1" data-genre="Sci-Fi">Sci-Fi</h1>
                 <div class="film-grid"></div>
                 <button class="voir-plus button" style="display:none">Voir plus</button>
                     <!-- <div class="film">
@@ -91,8 +91,8 @@
                     </div>
                 </div> -->
         </section>
-        <section>
-            <h1 data-genre="Mystery">Mystery</h1>
+        <section>            
+            <h1 id="best-rated-film-2" data-genre="Mystery">Mystery</h1>
                 <div class="film-grid"></div>
                 <button class="voir-plus button" style="display:none">Voir plus</button>
                     <!-- <div class="film">
@@ -234,15 +234,15 @@
             <div id="modal-detail" class="modal">
                 <div class="modal-content">
                     <h1 class="modal-film-title">Film title</h1>
-                    <h2 class="modal-film-infos">Film information</h2> <!--utiliser plutôt du <P> ou <span>-->
-                    <h3 class="realisation-txt">Réalisé par:</h3>
-                    <p class="realisation"></p>
+                    <p class="modal-film-infos">Film information</p>
+                    <p class="realisation-txt"><span class="label">Réalisé par :</span><br>
+                         <span class="value realisation"></span></p>
                     <div class="modal-image">
                         <img class="modal-film-image" src="../images/image-not-found.png" alt="Image du film">
                     </div>
                     <p class="modal-film-synopsis"></p>
-                    <h3 class="distribution-txt">Avec :</h3>
-                    <p class="modal-film-distribution"></p>
+                    <p class="distribution-txt"><span class="label">Avec :</span><br>
+                         <span class="value modal-film-distribution">distribution</span></p>
                     <button id="close-modal" class="button" aria-label="Fermer le modal"><span>Fermer</span></button>
                 </div>
             </div>            
