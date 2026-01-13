@@ -1,8 +1,3 @@
-/* Masque les films cachés */
-.film-cache {
-  display: none !important;
-}
-
 /* mise en forme des balises globales*/
 body {
   font-family: "Oswald", sans-serif;
@@ -20,6 +15,7 @@ h3 {
     font-weight: 400;
     font-size: 20px;
     margin-bottom: 0px;
+    margin: 10px;
 }
 
 p {
@@ -52,7 +48,7 @@ header {
     width: 200px;
     height: 40px;
     text-align: center;
-    align-content: center;
+    align-items: center;
     font-weight: 500;
     font-size: 24px;
     border-radius: 25px;
@@ -87,6 +83,10 @@ header {
     align-content: flex-start;
 }
 
+.best-film-txt h1 {
+    margin-top: 0;
+}
+
 .right-layout {
     display: flex;
     justify-content: flex-end;
@@ -119,16 +119,10 @@ header {
     display: none;
 }
 
-.hover h3 {
-    margin: 10px;
-}
 
 .right-layout {
     display: flex;
     justify-content: flex-end;
-}
-
-.hover .right-layout {
     margin-right: 10px;
 }
 
@@ -193,7 +187,7 @@ header {
   border: #2D2C2C 6px solid;
   background-color: #fefefe;
   margin: 15% auto; 
-  padding: 20px 20px;
+  padding: 16px 8px 16px 8px;
   width: 80%; 
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -205,11 +199,13 @@ header {
   font-weight: bold;
 }
 
-.modal-film-title { 
-    grid-column: 1;
-    grid-row: 1; 
-    align-self: 
-    start; 
+.modal-film-title {
+  grid-column: 1 / 2;
+  grid-row: 1;
+  align-self: center;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
 }
 
 .modal-film-infos {
@@ -234,35 +230,36 @@ header {
     start;
 }
 
+
 .modal-image {
-    grid-column: 2;
-    grid-row: 1 / span 4;
-    align-self: start;
-    justify-self: end;
-    display: flex;
-    align-items:
-    flex-start;
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: start;
+  justify-self: end;
+  display: flex;
+  align-items: flex-start;
 }
 
 .modal-image img {
-    width: 300px;
-    height: 450px;
-    object-fit: cover;
+  width: 300px;
+  height: 450px;
+  object-fit: cover;
 }
 
 .modal-film-synopsis {
-    grid-column: 1 / span 2;
-    grid-row: 5;
+  grid-column: 1 / span 2;
+  grid-row: 5;
 }
 
 .distribution-txt {
-    grid-column: 1 / span 2;
-    grid-row: 6; margin-top: 16px;
+  grid-column: 1 / span 2;
+  grid-row: 6;
+  margin-top: 16px;
 }
 
 .modal-film-distribution {
-    grid-column: 1 / span 2;
-    grid-row: 7;
+  grid-column: 1 / span 2;
+  grid-row: 7;
 }
 
 #close-modal {
@@ -275,113 +272,39 @@ header {
   font-size: 1.2rem;
 }
 
+/* Masque les films cachés */
+.film-cache {
+  display: none !important;
+}
+
 /* Media queries pour mobile */
 @media (max-width: 600px) {
   /* Meilleur film en colonne */
   .square-best-film {
     flex-direction: column;
     align-items: center;
-    gap: 12px;
   }
+
   .square-best-film img {
-    width: 90vw;
-    max-width: 320px;
-    height: auto;
-    margin: 0 auto;
+    width: 90%;
+    /* margin: 0 auto; */
   }
   .best-film-txt {
     width: 100%;
     align-items: center;
     text-align: center;
   }
-  .best-film-txt h1,
-  .best-film-txt .best-film-content,
-  .right-layout {
-    width: 100%;
-    text-align: center;
-    justify-content: center;
-  }
+  
   /* Grilles : 1 colonne */
   .film-grid .best-rated-films {
     grid-template-columns: 1fr;
     gap: 12px;
-    margin-right: 2px;
+    margin-right: 0;
+    padding: 0 4px;
   }
 
   .film-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
-    margin-right: 2px;
-  }
-
-  .film {
-    margin-right: 0;
-  }
-
-  .modal-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    align-items: stretch;
-    position: relative;
-    padding: 16px 8px;
-    margin: 16px auto 0 auto;
-    max-width: 100vw;
-    box-sizing: border-box;
-    overflow-x: visible;
-  }
-
-  .modal-row {
-    flex-direction: column;
-    gap: 0;
-    align-items: stretch;
-  }
-
-  .modal-infos {
-    order: 1;
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .modal-film-title {
-    grid-column: 1 / 2;
-    grid-row: 1;
-    align-self: center;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-  }
-
-  .modal-film-infos {
-    grid-column: 1 / 3;
-    grid-row: 2;
-  }
-  
-  .modal-infos .realisation-txt {
-    grid-column: 1 / 3;
-    grid-row: 3;
-  }
-  
-  .realisation {
-    grid-column: 1 / 3;
-    grid-row: 4;
-  }
-
-  .modal-film-synopsis {
-    grid-column: 1 / 3;
-    grid-row: 5;
-  }
-
-  .modal-image {
-    grid-column: 1 / 3;
-    grid-row: 6;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    /* max-width: 90vw; */
-    height: auto;
-    box-sizing: border-box;
-    text-align: center;
   }
 
   .modal-image img {
@@ -392,91 +315,52 @@ header {
     margin: 0 auto;
     object-fit: contain;
   }
-
-  .modal-content .distribution-txt {
-    grid-column: 1 / 3;
-    grid-row: 7;
-  }
-  .modal-film-distribution {
-    grid-column: 1 / 3;
-    grid-row: 8;
+}
+ 
+/* Media queries pour tablette */
+@media (max-width: 900px) and (min-width: 601px) {
+  .square-best-film img {
+    width: 40%;
   }
 
-    #close-modal {
-    grid-column: 2;
-    grid-row: 1;
-    position: static;
-    width: 36px;
-    height: 36px;
-    background: none;
-    border: none;
-    color: #FA0B0B;
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    cursor: pointer;
-    text-align: center;
-    padding: 0;
+  .best-film-txt .best-film-content {
+    line-height: 1.3em;
   }
 
-  #close-modal::after {
-    content: '\00d7';
-    font-size: 24px;
-    line-height: 1;
-    color: #FA0B0B;
-    font-weight: bold;
-    pointer-events: none;
-  }
-
-  #close-modal span { 
-    display: none; 
+  .film-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Media queries pour tablette */
-@media (max-width: 900px) and (min-width: 601px) {
-    /* Meilleur film : disposition web mais plus petit */
+@media (max-width: 900px) {  
   .square-best-film {
     gap: 12px;
   }
 
   .square-best-film img {
-    width: 220px;
-    height: 330px;
+    height: auto;
   }
 
-  .best-film-txt {
-    font-size: 90%;
-  }
-
-  .best-film-txt .best-film-content {
-    white-space: normal;
-    font-size: 1em;
-    line-height: 1.3em;
-    margin-top: 4px;
-  }
-
-  .film-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-right: 2px;
-  }
- 
   .film {
     margin-right: 0;
+    padding: 0;
   }
 
   .modal-content {
     display: grid;
-    grid-template-columns: 1fr 36px;
+    grid-template-columns: 1fr;
     gap: 12px;
     align-items: stretch;
     position: relative;
-    padding: 48px 16px 16px 16px;
-    margin-top: 16px;
+    padding: 16px 8px 16px 8px;
+    margin: 16px auto 0 auto;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: visible;
+  }
+
+  .modal-content h1 {
+    margin: 0px;
   }
 
   .modal-row {
@@ -491,17 +375,6 @@ header {
     text-align: left;
   }
 
-  .modal-film-title {
-    grid-column: 1 / 2;
-    grid-row: 1;
-    align-self: center;
-    font-size: 36px;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    text-align: center;
-    margin-bottom: 8px;
-  }
-
   .modal-film-infos {
     grid-column: 1 / 3;
     grid-row: 2;
@@ -511,23 +384,29 @@ header {
     grid-column: 1 / 3;
     grid-row: 3;
   }
+  
   .realisation {
     grid-column: 1 / 3;
     grid-row: 4;
   }
+
   .modal-film-synopsis {
     grid-column: 1 / 3;
     grid-row: 5;
   }
+
   .modal-image {
     grid-column: 1 / 3;
     grid-row: 6;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    max-width: 100%;
+    width: 100%;
+    max-width: 90vw;
     height: auto;
     box-sizing: border-box;
+    text-align: center;
+    padding: 0;
   }
 
   .modal-content .distribution-txt {

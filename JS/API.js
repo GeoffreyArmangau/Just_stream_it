@@ -386,6 +386,7 @@ function ajouterDataFilmIdDansGrilles() {
     });
 }
 
+
 // Fonction utilitaire pour déterminer le nombre de films visibles selon la taille d'écran
 function getNbFilmsVisibles() {
     if (window.innerWidth <= 600) return 2; // mobile
@@ -406,7 +407,7 @@ function appliquerVoirPlus(grid) {
         grid.parentNode.insertBefore(voirPlusBtn, grid.nextSibling);
     }
 
-    // État du bouton : voir plus ou voir moins ?
+    // Récupère l'état actuel du bouton
     let etat = voirPlusBtn.getAttribute('data-etat') || 'plus';
 
     function afficherRestreint() {
