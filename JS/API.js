@@ -1,3 +1,6 @@
+const titlesUrl = 'http://localhost:8000/api/v1/titles/';
+const genresUrl = 'http://localhost:8000/api/v1/genres';
+
 // Synchronise l'attribut data-genre avec le texte du h1 pour les sections best-rated-film-1 et best-rated-film-2
 function synchroniserDataGenreAvecTexte() {
     const ids = ['best-rated-film-1', 'best-rated-film-2'];
@@ -9,6 +12,7 @@ function synchroniserDataGenreAvecTexte() {
         }
     });
 }
+
 
 // Surveille les changements de texte sur les h1 ciblés et synchronise data-genre
 function activerSyncDataGenre() {
@@ -23,21 +27,20 @@ function activerSyncDataGenre() {
         }
     });
 }
-const API_URL = 'http://localhost:8000/api/v1/titles/';
 
 
 // Fonction pour charger tous les genres et les ajouter aux selects
 async function chargerTousLesGenres() {
-  try {
-    let url = 'http://localhost:8000/api/v1/genres';
-    let genres = [];
-    while (url) {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Erreur réseau');
-      const data = await response.json();
-      genres = genres.concat(data.results || data.genres || []);
-      url = data.next;
-    }
+    try {
+        let url = genresUrl;
+        let genres = [];
+        while (url) {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Erreur réseau');
+            const data = await response.json();
+            genres = genres.concat(data.results || data.genres || []);
+            url = data.next;
+        }
     // Récupère les selects existants
     const select1 = document.getElementById('film-selection-1');
     const select2 = document.getElementById('film-selection-2');
@@ -57,9 +60,9 @@ async function chargerTousLesGenres() {
   }
 }
 
+
 // Appel automatique au chargement de tous les genres
 document.addEventListener('DOMContentLoaded', chargerTousLesGenres);
-
 
 
 function addGenreListener(selectId, h1Id, gridSelector) {
@@ -97,7 +100,7 @@ async function afficherMeilleurFilm() {
         const synopsis = section.querySelector('.best-film-txt .best-film-content');
         const detailsBtn = section.querySelector('.right-layout a');
 
-        let url = API_URL;
+        let url = titlesUrl;
         let bestFilm = null;
         let bestScore = -Infinity;
         let pageCount = 0;
@@ -151,7 +154,7 @@ async function afficherMeilleurFilm() {
 // Fonction pour afficher les films d'un genre donné dans la grid correspondante
 async function afficherFilmsParGenre(genre, grid) {
     try {
-        let url = `${API_URL}?genre=${encodeURIComponent(genre)}`;
+        let url = `${titlesUrl}?genre=${encodeURIComponent(genre)}`;
         let films = [];
         let pageCount = 0;
         const maxPages = 10;
@@ -209,6 +212,7 @@ async function afficherFilmsParGenre(genre, grid) {
     }
 }
 
+
 // Fonction pour remplir toutes les sections par genre
 async function afficherToutesLesSectionsParGenre() {
     // Sélectionne tous les h1[data-genre] et leur .film-grid suivant
@@ -233,7 +237,7 @@ async function afficherMeilleursFilms() {
         const grid = section.nextElementSibling;
         if (!grid || !grid.classList.contains('film-grid')) continue;
         grid.innerHTML = '';
-        let url = API_URL;
+        let url = titlesUrl;
         let films = [];
         let pageCount = 0;
         const maxPages = 50;
@@ -316,7 +320,7 @@ async function afficherModalFilm(filmId) {
     realisation.textContent = '';
     image.src = '';
     image.alt = '';
-    const url = `http://localhost:8000/api/v1/titles/${filmId}`;
+    const url = `${titlesUrl}${filmId}`;
     try {
         const response = await fetch(url);
         const film = await response.json();
@@ -324,6 +328,7 @@ async function afficherModalFilm(filmId) {
         infos.innerHTML =
             `Année : ${film.year || 'N/A'}<br>` +
             `Genres : ${(film.genres || []).join(', ')}<br>` +
+            `Classification : ${getAgeRatingFromMovie(film)}<br>` +
             `Durée : ${film.duration ? film.duration + ' minutes' : 'N/A'}<br>` +
             `IMDB score : ${film.imdb_score ? film.imdb_score + '/10' : 'N/A'}<br>` +
             (film.worldwide_gross_income ? `Recettes au box-office : ${film.worldwide_gross_income}<br>` : '');
@@ -331,6 +336,7 @@ async function afficherModalFilm(filmId) {
         synopsis.textContent = film.long_description || film.description || '';
         distribution.textContent = film.actors ? `${(film.actors || []).join(', ')}` : '';
         image.src = film.image_url || '';
+        image.onerror = function() { this.src = '../images/image-not-found.png'; };
         image.alt = film.title;
     } catch (e) {
         titre.textContent = 'Film introuvable';
@@ -342,6 +348,7 @@ async function afficherModalFilm(filmId) {
         image.alt = '';
     }
 }
+
 
 // Intercepte le clic sur tous les boutons Détails
 function activerModalsFilms() {
@@ -438,12 +445,29 @@ function appliquerVoirPlus(grid) {
     };
 }
 
+
 // Réapplique le masquage lors du redimensionnement
 window.addEventListener('resize', () => {
     document.querySelectorAll('.film-grid').forEach(grid => {
         appliquerVoirPlus(grid);
     });
 });
+
+// Fonction qui détermine la classification d'âge en fonction des genres
+function getAgeRatingFromMovie(movie) {
+  // age rating based on genres
+  if (movie.genres.includes("Adult") || movie.genres.includes("Family")) {
+    return "18+";
+  }
+  if (movie.genres.includes("Horror") || movie.genres.includes("Crime")) {
+    return "16+";
+  }
+  if (movie.genres.includes("Drama")) {
+    return "12+";
+  }
+  return "Tous publics";
+}
+
 
 async function affichageComplet() {
     synchroniserDataGenreAvecTexte();

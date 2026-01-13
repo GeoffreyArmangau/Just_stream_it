@@ -12,6 +12,8 @@ h1 {
     font-weight: 600;
     font-size: 48px;
     line-height: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 h3 {
@@ -47,8 +49,8 @@ header {
     text-decoration: none;
     background-color: #FA0B0B;
     color: white;
-    width: 166px;
-    height: 68px;
+    width: 200px;
+    height: 40px;
     text-align: center;
     align-content: center;
     font-weight: 500;
@@ -318,12 +320,15 @@ header {
 
   .modal-content {
     display: grid;
-    grid-template-columns: 1fr 36px;
+    grid-template-columns: 1fr;
     gap: 12px;
     align-items: stretch;
     position: relative;
-    padding: 48px 16px 16px 16px;
-    margin-top: 16px;
+    padding: 16px 8px;
+    margin: 16px auto 0 auto;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: visible;
   }
 
   .modal-row {
@@ -342,6 +347,8 @@ header {
     grid-column: 1 / 2;
     grid-row: 1;
     align-self: center;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   .modal-film-infos {
@@ -353,20 +360,37 @@ header {
     grid-column: 1 / 3;
     grid-row: 3;
   }
+  
   .realisation {
     grid-column: 1 / 3;
     grid-row: 4;
   }
+
   .modal-film-synopsis {
     grid-column: 1 / 3;
     grid-row: 5;
   }
+
   .modal-image {
     grid-column: 1 / 3;
     grid-row: 6;
-    display: flex;
-    justify-content: center;
-    margin: 12px 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    /* max-width: 90vw; */
+    height: auto;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .modal-image img {
+    width: 100%;
+    max-width: 100vw;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
   }
 
   .modal-content .distribution-txt {
@@ -387,22 +411,20 @@ header {
     background: none;
     border: none;
     color: #FA0B0B;
-    font-size: 2.2rem;
+    font-size: 24px;
     font-weight: bold;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
     cursor: pointer;
-    box-shadow: none;
     text-align: center;
     padding: 0;
   }
 
   #close-modal::after {
     content: '\00d7';
-    font-size: 2.2rem;
+    font-size: 24px;
     line-height: 1;
     color: #FA0B0B;
     font-weight: bold;
@@ -432,7 +454,6 @@ header {
 
   .best-film-txt .best-film-content {
     white-space: normal;
-    word-break: break-word;
     font-size: 1em;
     line-height: 1.3em;
     margin-top: 4px;
@@ -474,6 +495,11 @@ header {
     grid-column: 1 / 2;
     grid-row: 1;
     align-self: center;
+    font-size: 36px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    text-align: center;
+    margin-bottom: 8px;
   }
 
   .modal-film-infos {
@@ -496,9 +522,12 @@ header {
   .modal-image {
     grid-column: 1 / 3;
     grid-row: 6;
-    display: flex;
-    justify-content: center;
-    margin: 12px 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
   }
 
   .modal-content .distribution-txt {
@@ -519,22 +548,20 @@ header {
     background: none;
     border: none;
     color: #FA0B0B;
-    font-size: 2.2rem;
+    font-size: 24px;
     font-weight: bold;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
     cursor: pointer;
-    box-shadow: none;
     text-align: center;
     padding: 0;
   }
 
   #close-modal::after {
     content: '\00d7';
-    font-size: 2.2rem;
+    font-size: 24px;
     line-height: 1;
     color: #FA0B0B;
     font-weight: bold;
