@@ -457,7 +457,7 @@ window.addEventListener('resize', () => {
 // Fonction qui détermine la classification d'âge en fonction des genres
 function getAgeRatingFromMovie(movie) {
   // age rating based on genres
-  if (movie.genres.includes("Adult") || movie.genres.includes("Family")) {
+  if (movie.genres.includes("Adult") || movie.genres.includes("Erotic")) {
     return "18+";
   }
   if (movie.genres.includes("Horror") || movie.genres.includes("Crime")) {

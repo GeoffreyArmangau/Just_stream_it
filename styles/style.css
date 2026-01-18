@@ -5,7 +5,7 @@ body {
 
 h1 {
     font-weight: 600;
-    font-size: 48px;
+    font-size: 36px;
     line-height: 100%;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -60,6 +60,18 @@ header {
     height: 25px;
     font-size: 14px;
 }
+
+.detail-container .button{
+    width: 214px;
+    height: 36px;
+}
+
+.voir-plus {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
 /* mise en forme de la section meilleur film */
 .square-best-film {
@@ -138,17 +150,13 @@ header {
     margin-bottom: 40px;
 }
 
-.detail-container .button{
-    width: 214px;
-    height: 36px;
-}
-
 /* mise en forme des selecteurs de catégories et de lignes */
 .select-titles {
   display: flex;
   align-items: center; 
   gap: 1em; 
 }
+
 .select-titles select {
   width: 202px;
   height: 40px;
@@ -183,6 +191,7 @@ header {
   background-color: rgba(0,0,0,0.7); 
 }
 
+/* gestion du modal */
 .modal-content {
   border: #2D2C2C 6px solid;
   background-color: #fefefe;
@@ -199,6 +208,7 @@ header {
   font-weight: bold;
 }
 
+/* Restructure les éléments du modal */
 .modal-film-title {
   grid-column: 1 / 2;
   grid-row: 1;
@@ -212,7 +222,7 @@ header {
     grid-column: 1;
     grid-row: 2;
     align-self: start;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
 }
 
@@ -229,7 +239,6 @@ header {
     align-self:
     start;
 }
-
 
 .modal-image {
   grid-column: 2;
@@ -262,6 +271,7 @@ header {
   grid-row: 7;
 }
 
+/* mise en forme du bouton de fermeture du modal */
 #close-modal {
   grid-column: 1 / span 2;
   grid-row: 8;
@@ -274,12 +284,12 @@ header {
 
 /* Masque les films cachés */
 .film-cache {
-  display: none !important;
+  display: none;
 }
 
 /* Media queries pour mobile */
 @media (max-width: 600px) {
-  /* Meilleur film en colonne */
+  /* Gestion de la section meilleur film */
   .square-best-film {
     flex-direction: column;
     align-items: center;
@@ -289,13 +299,13 @@ header {
     width: 90%;
     /* margin: 0 auto; */
   }
+  
   .best-film-txt {
     width: 100%;
     align-items: center;
-    text-align: center;
   }
   
-  /* Grilles : 1 colonne */
+  /* gestion de la grille de films */
   .film-grid .best-rated-films {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -307,6 +317,7 @@ header {
     grid-template-columns: 1fr;
   }
 
+  /* gestion du modal */
   .modal-image img {
     width: 100%;
     max-width: 100vw;
@@ -319,6 +330,8 @@ header {
  
 /* Media queries pour tablette */
 @media (max-width: 900px) and (min-width: 601px) {
+  
+  /* gestion de la section meilleur film */
   .square-best-film img {
     width: 40%;
   }
@@ -327,12 +340,15 @@ header {
     line-height: 1.3em;
   }
 
+  /* gestion de la grille de films */
   .film-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* Media queries pour mobile et tablette */
 @media (max-width: 900px) {  
+  /* gestion de la section meilleur film */
   .square-best-film {
     gap: 12px;
   }
@@ -341,15 +357,16 @@ header {
     height: auto;
   }
 
+  /*gestion de la grille de films */
   .film {
     margin-right: 0;
     padding: 0;
   }
 
+  /* gestion du modal */
   .modal-content {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
     align-items: stretch;
     position: relative;
     padding: 16px 8px 16px 8px;
@@ -359,8 +376,10 @@ header {
     overflow-x: visible;
   }
 
-  .modal-content h1 {
+  .modal-content h1, p {
     margin: 0px;
+    padding: 0px;
+    gap: 0;
   }
 
   .modal-row {
@@ -394,6 +413,8 @@ header {
     grid-column: 1 / 3;
     grid-row: 5;
   }
+
+
 
   .modal-image {
     grid-column: 1 / 3;
