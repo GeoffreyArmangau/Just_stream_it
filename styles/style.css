@@ -36,7 +36,6 @@ header {
 .logo {
     width: 127px;
     height: 94px;
-    /* margin-right: 50px; */
 }
 
 /* mise en forme des boutons réutilisables */
@@ -80,7 +79,7 @@ header {
     display: flex;
     align-items: flex-start;
     align-content: flex-start;
-    gap: 16px
+    gap: 16px;
 }
 
 .square-best-film img {
@@ -102,6 +101,7 @@ header {
 .right-layout {
     display: flex;
     justify-content: flex-end;
+    margin: 10px;
 }
 
 /* mise en forme de la grille de films */
@@ -131,13 +131,6 @@ header {
     display: none;
 }
 
-
-.right-layout {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 10px;
-}
-
 .film:hover .hover {
     display: block;
 }
@@ -151,26 +144,17 @@ header {
 }
 
 /* mise en forme des selecteurs de catégories et de lignes */
-.select-titles {
-  display: flex;
-  align-items: center; 
-  gap: 1em; 
-}
-
-.select-titles select {
-  width: 202px;
-  height: 40px;
-  font-size: 16px;
-}
-
-.select-titles h1 {
-  margin: 0;
-}
-
 .line-selector {
   display: flex;
   align-items: center;
-  gap: 10px;
+  margin-top: 20px;
+  gap: 16px;
+}
+
+.line-selector select {
+  width: 202px;
+  height: 40px;
+  font-size: 16px;
 }
 
 .line-selector h1 {
@@ -181,13 +165,12 @@ header {
 .modal {
   display: none; 
   position: fixed; 
-  z-index: 10; 
+  z-index: 10;
   left: 0;
   top: 0;
   width: 100%; 
   height: 100%; 
   overflow: auto; 
-  background-color: rgb(0,0,0); 
   background-color: rgba(0,0,0,0.7); 
 }
 
@@ -200,8 +183,8 @@ header {
   width: 80%; 
   display: grid;
   grid-template-columns: 1fr 300px;
-  grid-template-rows: repeat(4, auto) auto auto auto auto;
-  gap: 16px 32px;
+  grid-template-rows: repeat(4, auto);
+  gap: 16px;
 }
 
 .modal-content .label {
@@ -221,7 +204,6 @@ header {
 .modal-film-infos {
     grid-column: 1;
     grid-row: 2;
-    align-self: start;
     font-size: 20px;
     font-weight: bold;
 }
@@ -229,22 +211,16 @@ header {
 .realisation-txt {
     grid-column: 1;
     grid-row: 3;
-    align-self:
-    start;
 }
 
 .realisation {
     grid-column: 1;
     grid-row: 4;
-    align-self:
-    start;
 }
 
 .modal-image {
   grid-column: 2;
   grid-row: 1 / span 4;
-  align-self: start;
-  justify-self: end;
   display: flex;
   align-items: flex-start;
 }
@@ -279,7 +255,7 @@ header {
   position: static;
   width: 214px;
   height: 36px;
-  font-size: 1.2rem;
+  font-size: 24px;
 }
 
 /* Masque les films cachés */
@@ -289,6 +265,15 @@ header {
 
 /* Media queries pour mobile */
 @media (max-width: 600px) {
+  /*mise en forme du header*/
+  header p {
+    display: none;
+  }
+
+  header .logo {
+    margin: auto;
+  }
+  
   /* Gestion de la section meilleur film */
   .square-best-film {
     flex-direction: column;
@@ -320,7 +305,7 @@ header {
   /* gestion du modal */
   .modal-image img {
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
     height: auto;
     display: block;
     margin: 0 auto;
@@ -334,10 +319,6 @@ header {
   /* gestion de la section meilleur film */
   .square-best-film img {
     width: 40%;
-  }
-
-  .best-film-txt .best-film-content {
-    line-height: 1.3em;
   }
 
   /* gestion de la grille de films */
@@ -367,13 +348,11 @@ header {
   .modal-content {
     display: grid;
     grid-template-columns: 1fr;
-    align-items: stretch;
     position: relative;
     padding: 16px 8px 16px 8px;
     margin: 16px auto 0 auto;
-    max-width: 100vw;
+    max-width: 100%;
     box-sizing: border-box;
-    overflow-x: visible;
   }
 
   .modal-content h1, p {
@@ -385,7 +364,6 @@ header {
   .modal-row {
     flex-direction: column;
     gap: 0;
-    align-items: stretch;
   }
 
   .modal-infos {
@@ -414,8 +392,6 @@ header {
     grid-row: 5;
   }
 
-
-
   .modal-image {
     grid-column: 1 / 3;
     grid-row: 6;
@@ -423,7 +399,7 @@ header {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    max-width: 90vw;
+    max-width: 90%;
     height: auto;
     box-sizing: border-box;
     text-align: center;
