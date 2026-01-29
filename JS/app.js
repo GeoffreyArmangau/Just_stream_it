@@ -65,26 +65,18 @@ function addGenreListener(selectId, h1Id) {
 }
 
 
-function synchroniserDataGenreAvecTexte() {
-    const ids = ['best-rated-film-1', 'best-rated-film-2'];
-    ids.forEach(id => {
-        const h1 = document.getElementById(id);
-        if (h1) {
-            const texte = h1.textContent.trim();
-            h1.setAttribute('data-genre', texte);
-        }
-    });
-}
-
 /**
- * Surveille les changements de texte sur les h1 ciblés et synchronise data-genre automatiquement.
+ * Synchronise immédiatement l'attribut data-genre des h1 ciblés avec leur texte,
+ * puis active un MutationObserver pour maintenir la synchronisation en temps réel.
  */
-
-function activerSyncDataGenre() {
+function synchroniserEtObserverDataGenre() {
     const ids = ['best-rated-film-1', 'best-rated-film-2'];
     ids.forEach(id => {
         const h1 = document.getElementById(id);
         if (h1) {
+            // Synchronisation immédiate
+            h1.setAttribute('data-genre', h1.textContent.trim());
+            // Observer les changements de texte
             const observer = new MutationObserver(() => {
                 h1.setAttribute('data-genre', h1.textContent.trim());
             });
@@ -324,6 +316,7 @@ async function afficherMeilleursFilms() {
     }
 }
 
+
 // =====================
 // 4. Modale d'affichage des détails d'un film
 // =====================
@@ -440,6 +433,7 @@ function getNombreFilmsVisibles() {
     return 6; // desktop
 }
 
+
 /**
  * Gère l'affichage Voir plus / Voir moins dans une grille de films.
  * @param {HTMLElement} grid - La grille à gérer
@@ -495,12 +489,14 @@ function appliquerVoirPlus(grid) {
     };
 }
 
+
 // Réapplique le masquage lors du redimensionnement
 window.addEventListener('resize', () => {
     document.querySelectorAll('.film-grid').forEach(grid => {
         appliquerVoirPlus(grid);
     });
 });
+
 
 /**
  * Détermine la classification d'âge d'un film selon ses genres.
@@ -523,6 +519,7 @@ function getAgeRatingFromMovie(movie) {
   return "Tous publics";
 }
 
+
 // =====================
 // 6. Initialisation globale
 // =====================
@@ -534,8 +531,7 @@ function getAgeRatingFromMovie(movie) {
 
 async function affichageComplet() {
     await chargerTousLesGenres();
-    synchroniserDataGenreAvecTexte();
-    activerSyncDataGenre();
+    synchroniserEtObserverDataGenre();
     await afficherMeilleurFilm();
     await afficherMeilleursFilms();
     await afficherToutesLesSectionsParGenre();
