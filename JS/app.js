@@ -182,10 +182,7 @@ async function afficherMeilleursFilms() {
             }
             const response = await fetch(fetchUrl);
             const data = await response.json();
-            const pageFilms = (data.results || []).filter(film => {
-                const score = parseFloat(film.imdb_score);
-                return !isNaN(score) && score > 7;
-            });
+            const pageFilms = (data.results || []);
             films = films.concat(pageFilms);
             url = data.next;
             pageCount++;
