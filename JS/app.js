@@ -276,7 +276,7 @@ async function afficherModalFilm(filmId) {
             `Classification : ${getAgeRatingFromMovie(film)}<br>` +
             `Durée : ${film.duration ? film.duration + ' minutes' : 'N/A'}<br>` +
             `IMDB score : ${film.imdb_score ? film.imdb_score + '/10' : 'N/A'}<br>` +
-            (film.worldwide_gross_income ? `Recettes au box-office : ${film.worldwide_gross_income}<br>` : '');
+            `Recettes au box-office : ${film.worldwide_gross_income ? film.worldwide_gross_income + ' $' : 'N/A'}<br>`;
         realisation.textContent = film.directors ? `${(film.directors || []).join(', ')}` : '';
         synopsis.textContent = film.long_description || film.description || '';
         distribution.textContent = film.actors ? `${(film.actors || []).join(', ')}` : '';
