@@ -5,89 +5,7 @@ const titlesUrl = 'http://localhost:8000/api/v1/titles/';
 const genresUrl = 'http://localhost:8000/api/v1/genres';
 
 // =====================
-// 2. Gestion des genres (select)
-// =====================
-// Charge tous les genres et les ajoute aux selects
-async function chargerTousLesGenres() {
-    try {
-        let url = genresUrl;
-        let genres = [];
-        while (url) {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Erreur réseau');
-            const data = await response.json();
-            genres = genres.concat(data.results || data.genres || []);
-            url = data.next;
-        }
-        const select1 = document.getElementById('film-selection-1');
-        const select2 = document.getElementById('film-selection-2');
-        select1.innerHTML = '<option value="">-- Choisir un genre --</option>';
-        select2.innerHTML = '<option value="">-- Choisir un genre --</option>';
-        genres.forEach(genre => {
-            const option = document.createElement('option');
-            option.value = genre.name || genre;
-            option.textContent = genre.name || genre;
-            select1.appendChild(option);
-            select2.appendChild(option.cloneNode(true));
-        });
-    } catch (error) {
-        console.error('Erreur lors de la récupération :', error);
-    }
-}
-
-
-/**
- * Ajoute un écouteur sur le select pour changer le genre affiché et mettre à jour la grille de films.
- * @param {string} selectId - L'id du select HTML
- * @param {string} h1Id - L'id du h1 à mettre à jour
- */
-
-// Ajoute un écouteur sur le select pour changer le genre affiché
-function addGenreListener(selectId, h1Id) {
-    const select = document.getElementById(selectId);
-    const h1 = document.getElementById(h1Id);
-    const grid = select.closest('section').querySelector('.film-grid');
-    select.addEventListener('change', async function() {
-        if (select.value) {
-            h1.textContent = select.options[select.selectedIndex].textContent;
-            h1.setAttribute('data-genre', select.value);
-            if (grid && grid.classList.contains('film-grid')) {
-                await afficherFilmsParGenre(select.value, grid);
-            }
-        } else {
-            h1.textContent = "Autres";
-            h1.setAttribute('data-genre', '');
-            if (grid && grid.classList.contains('film-grid')) {
-                grid.innerHTML = '';
-            }
-        }
-    });
-}
-
-
-/**
- * Synchronise immédiatement l'attribut data-genre des h1 ciblés avec leur texte,
- * puis active un MutationObserver pour maintenir la synchronisation en temps réel.
- */
-function synchroniserEtObserverDataGenre() {
-    const ids = ['best-rated-film-1', 'best-rated-film-2'];
-    ids.forEach(id => {
-        const h1 = document.getElementById(id);
-        if (h1) {
-            // Synchronisation immédiate
-            h1.setAttribute('data-genre', h1.textContent.trim());
-            // Observer les changements de texte
-            const observer = new MutationObserver(() => {
-                h1.setAttribute('data-genre', h1.textContent.trim());
-            });
-            observer.observe(h1, { childList: true, characterData: true, subtree: true });
-        }
-    });
-}
-
-
-// =====================
-// 3. Affichage des films (meilleur, par genre, meilleurs films)
+// 2. Affichage des films (meilleur, par genre, meilleurs films)
 // =====================
 
 /**
@@ -119,7 +37,7 @@ async function afficherMeilleurFilm() {
                 }
             });
             url = data.next;
-            pageCount++;
+            pageCount++;      
         }
         if (!bestFilm) {
             img.src = '';
@@ -140,11 +58,11 @@ async function afficherMeilleurFilm() {
         img.src = bestFilm.image_url;
         img.alt = bestFilm.title;
         titre.textContent = bestFilm.title;
-        synopsis.textContent = description || bestFilm.title;
+        synopsis.textContent = description || 'Pas de description pour ce film';
         detailsBtn.href = '#';
         detailsBtn.setAttribute('data-film-id', bestFilm.id);
-        detailsBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        detailsBtn.addEventListener('click', function(event) {
+            event.preventDefault();
             afficherModalFilm(bestFilm.id);
         });
     } catch (error) {
@@ -201,8 +119,8 @@ async function afficherFilmsParGenre(genre, grid) {
             detailsBtn.className = 'button';
             detailsBtn.setAttribute('data-film-id', movie.id);
             detailsBtn.textContent = 'Détails';
-            detailsBtn.addEventListener('click', function(e) {
-                e.preventDefault();
+            detailsBtn.addEventListener('click', function(event) {
+                event.preventDefault();
                 afficherModalFilm(movie.id);
             });
 
@@ -300,8 +218,8 @@ async function afficherMeilleursFilms() {
             detailsBtn.className = 'button';
             detailsBtn.setAttribute('data-film-id', movie.id);
             detailsBtn.textContent = 'Détails';
-            detailsBtn.addEventListener('click', function(e) {
-                e.preventDefault();
+            detailsBtn.addEventListener('click', function(event) {
+                event.preventDefault();
                 afficherModalFilm(movie.id);
             });
 
@@ -318,7 +236,7 @@ async function afficherMeilleursFilms() {
 
 
 // =====================
-// 4. Modale d'affichage des détails d'un film
+// 3. Modale d'affichage des détails d'un film
 // =====================
 
 /**
@@ -365,7 +283,7 @@ async function afficherModalFilm(filmId) {
         image.src = film.image_url || '';
         image.onerror = function() { this.src = '../images/image-not-found.png'; };
         image.alt = film.title;
-    } catch (e) {
+    } catch (error) {
         titre.textContent = 'Film introuvable';
         infos.textContent = '';
         synopsis.textContent = '';
@@ -380,8 +298,8 @@ async function afficherModalFilm(filmId) {
 // Intercepte le clic sur tous les boutons Détails
 function activerModalsFilms() {
     document.querySelectorAll('a.button[data-film-id]').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
             const filmId = btn.getAttribute('data-film-id');
             if (filmId) afficherModalFilm(filmId);
         });
@@ -418,7 +336,7 @@ function ajouterDataFilmIdDansGrilles() {
 
 
 // =====================
-// 5. Utilitaires d'affichage
+// 4. Utilitaires d'affichage
 // =====================
 
 /**
@@ -464,7 +382,11 @@ function appliquerVoirPlus(grid) {
         });        
         voirPlusBouton.textContent = 'Voir plus';
         voirPlusBouton.setAttribute('data-etat', 'plus');
-        voirPlusBouton.style.display = films.length > nombreVisibles ? 'block' : 'none';
+        if (films.length > nombreVisibles){
+            voirPlusBouton.style.display = 'block';
+        } else {
+            voirPlusBouton.style.display = 'none';
+        }     
     }
 
     function afficherTout() {
@@ -519,6 +441,81 @@ function getAgeRatingFromMovie(movie) {
   return "Tous publics";
 }
 
+// =====================
+// 5. Gestion des genres (select)
+// =====================
+// Charge tous les genres et les ajoute aux selects
+async function chargerTousLesGenres() {
+    try {
+        let url = genresUrl;
+        let genres = [];
+        while (url) {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Erreur réseau');
+            const data = await response.json();
+            genres = genres.concat(data.results || data.genres || []);
+            url = data.next;
+        }
+        const select1 = document.getElementById('film-selection-1');
+        const select2 = document.getElementById('film-selection-2');
+        select1.innerHTML = '<option value="">-- Choisir un genre --</option>';
+        select2.innerHTML = '<option value="">-- Choisir un genre --</option>';
+        genres.forEach(genre => {
+            const option = document.createElement('option');
+            option.value = genre.name || genre;
+            option.textContent = genre.name || genre;
+            select1.appendChild(option);
+            select2.appendChild(option.cloneNode(true));
+        });
+    } catch (error) {
+        console.error('Erreur lors de la récupération :', error);
+    }
+}
+
+
+/**
+ * Ajoute un écouteur sur le select pour changer le genre affiché et mettre à jour la grille de films.
+ * @param {string} selectId - L'id du select HTML
+ * @param {string} h1Id - L'id du h1 à mettre à jour
+ */
+
+// Ajoute un écouteur sur le select pour changer le genre affiché
+function addGenreListener(selectId, h1Id) {
+    const select = document.getElementById(selectId);
+    const h1 = document.getElementById(h1Id);
+    const grid = select.closest('section').querySelector('.film-grid');
+    select.addEventListener('change', async function() {
+        if (select.value) {
+            h1.textContent = select.options[select.selectedIndex].textContent;
+            h1.setAttribute('data-genre', select.value);
+            if (grid && grid.classList.contains('film-grid')) {
+                await afficherFilmsParGenre(select.value, grid);
+            }
+        } else {
+            h1.textContent = "Autres";
+            h1.setAttribute('data-genre', '');
+            if (grid && grid.classList.contains('film-grid')) {
+                grid.innerHTML = '';
+            }
+        }
+    });
+}
+
+
+/**
+ * Synchronise immédiatement l'attribut data-genre des h1 ciblés avec leur texte,
+ * puis active un MutationObserver pour maintenir la synchronisation en temps réel.
+ */
+function synchroniserEtObserverDataGenre() {
+    var ids = ['best-rated-film-1', 'best-rated-film-2'];
+    for (var i = 0; i < ids.length; i++) {
+        var h1 = document.getElementById(ids[i]);
+        if (h1) {
+            h1.setAttribute('data-genre', h1.textContent.trim());
+            // Pas d'observateur, juste une synchronisation simple
+        }
+    }
+}
 
 // =====================
 // 6. Initialisation globale
@@ -543,4 +540,3 @@ async function affichageComplet() {
 document.addEventListener('DOMContentLoaded', affichageComplet);
 addGenreListener('film-selection-1', 'autres-1');
 addGenreListener('film-selection-2', 'autres-2');
-
