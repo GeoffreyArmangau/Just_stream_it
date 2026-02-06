@@ -273,6 +273,7 @@ async function afficherModalFilm(filmId) {
         infos.innerHTML =
             `Année : ${film.year || 'N/A'}<br>` +
             `Genres : ${(film.genres || []).join(', ')}<br>` +
+            `Pays d'origine: ${film.countries || '<N/A>'}<br>` +
             `Classification : ${getAgeRatingFromMovie(film)}<br>` +
             `Durée : ${film.duration ? film.duration + ' minutes' : 'N/A'}<br>` +
             `IMDB score : ${film.imdb_score ? film.imdb_score + '/10' : 'N/A'}<br>` +
