@@ -1,8 +1,57 @@
+// 1. Constantes API + factorisation
 // =====================
-// 1. Constantes API
-// =====================
+
 const titlesUrl = 'http://localhost:8000/api/v1/titles/';
 const genresUrl = 'http://localhost:8000/api/v1/genres';
+
+// =====================
+// Fonction utilitaire pour fetch + json + gestion erreur pour eviter le DRY
+// Correctif de la soutenance
+
+async function fetchJson(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Erreur réseau');
+    return await response.json();
+}
+
+// =====================
+// Fonction utilitaire pour créer un bloc film DOM
+// Correctif de la soutenance
+function createMovieElement(movie) {
+    const movieDiv = document.createElement('div');
+    movieDiv.className = 'film';
+
+    const picture = document.createElement('img');
+    picture.src = movie.image_url;
+    picture.alt = movie.title;
+    picture.onerror = function() { this.src = '../images/image-not-found.png'; };
+
+    const hoverDiv = document.createElement('div');
+    hoverDiv.className = 'hover';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = movie.title;
+
+    const rightLayout = document.createElement('div');
+    rightLayout.className = 'right-layout';
+
+    const detailsBtn = document.createElement('a');
+    detailsBtn.href = '#';
+    detailsBtn.className = 'button';
+    detailsBtn.setAttribute('data-film-id', movie.id);
+    detailsBtn.textContent = 'Détails';
+    detailsBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        displayModalMovie(movie.id);
+    });
+
+    rightLayout.appendChild(detailsBtn);
+    hoverDiv.appendChild(h3);
+    hoverDiv.appendChild(rightLayout);
+    movieDiv.appendChild(picture);
+    movieDiv.appendChild(hoverDiv);
+    return movieDiv;
+}
 
 // =====================
 // 2. Affichage des films (meilleur, par genre, meilleurs films)
@@ -12,62 +61,104 @@ const genresUrl = 'http://localhost:8000/api/v1/genres';
  * Cherche le film avec la meilleure note et affiche ses infos dans la section dédiée.
  */
 
-async function afficherMeilleurFilm() {
+// Nouvelle fonction pour récupérer les 7 meilleurs films (triés par score)
+// Correctif de la soutenance
+async function loadTopMovies() {
+    const url = `${titlesUrl}?sort_by=-imdb_score&page_size=7`; // Correctif de la soutenance
     try {
-        // Sélectionne la section du meilleur film
-        const section = document.querySelector('section');
-        const img = section.querySelector('.square-best-film img');
-        const titre = section.querySelector('.best-film-txt h1');
-        const synopsis = section.querySelector('.best-film-txt .best-film-content');
-        const detailsBtn = section.querySelector('.right-layout a');
-        let url = titlesUrl;
-        let bestFilm = null;
-        let bestScore = 0;
-        let pageCount = 0;
-        const maxPages = 50;
-        // Parcourt toutes les pages pour trouver le meilleur film
-        while (url && pageCount < maxPages) {
-            const response = await fetch(url);
-            const data = await response.json();
-            (data.results || []).forEach(film => {
-                const score = parseFloat(film.imdb_score);
-                if (!isNaN(score) && score > bestScore) {
-                    bestScore = score;
-                    bestFilm = film;
-                }
-            });
-            url = data.next;
-            pageCount++;      
-        }
-        if (!bestFilm) {
-            img.src = '';
-            titre.textContent = 'Aucun film trouvé';
-            synopsis.textContent = '';
-            detailsBtn.href = '#';
-            return;
-        }
-        // Récupère le synopsis via l'API détail si possible
-        let description = '';
-        try {
-            const detailResp = await fetch(bestFilm.url);
-            if (detailResp.ok) {
-                const detailData = await detailResp.json();
-                description = detailData.long_description || detailData.description || '';
-            }
-        } catch {}
-        img.src = bestFilm.image_url;
-        img.alt = bestFilm.title;
-        titre.textContent = bestFilm.title;
-        synopsis.textContent = description || 'Pas de description pour ce film';
-        detailsBtn.href = '#';
-        detailsBtn.setAttribute('data-film-id', bestFilm.id);
-        detailsBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            afficherModalFilm(bestFilm.id);
-        });
+        const data = await fetchJson(url);
+        return data.results || [];
     } catch (error) {
-        console.error('Erreur chargement meilleur film:', error);
+        console.error('Erreur lors du chargement des meilleurs films:', error);
+        return [];
     }
+}
+
+// Affiche le meilleur film dans la section dédiée
+async function displayBestMovie() {
+    const movies = await loadTopMovies();
+    const bestMovie = movies[0];
+    const section = document.querySelector('section');
+    const picture = section.querySelector('.square-best-film img');
+    const title = section.querySelector('.best-film-txt h1');
+    const synopsis = section.querySelector('.best-film-txt .best-film-content');
+    const detailsBtn = section.querySelector('.right-layout a');
+    if (!bestMovie) {
+        picture.src = '';
+        title.textContent = 'Aucun film trouvé';
+        synopsis.textContent = '';
+        detailsBtn.href = '#';
+        return;
+    }
+    let description = '';
+    try {
+        const detailData = await fetchJson(bestMovie.url);
+        description = detailData.long_description || detailData.description || '';
+    } catch {}
+    picture.src = bestMovie.image_url || '../images/image-not-found.png';
+    picture.alt = bestMovie.title;
+    picture.onerror = function() { this.src = '../images/image-not-found.png'; };
+    title.textContent = bestMovie.title;
+    synopsis.textContent = description || 'Pas de description pour ce film';
+    detailsBtn.href = '#';
+    detailsBtn.setAttribute('data-film-id', bestMovie.id);
+    detailsBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        displayModalMovie(bestMovie.id);
+    });
+}
+
+// Affiche les 6 films suivants dans la section "Films les mieux notés"
+// Correctif de la soutenance
+async function displayBestRatedMovies() {
+    const movies = await loadTopMovies();
+    const bestRatedSection = document.getElementById('best-rated-film');
+    if (!bestRatedSection) return;
+    const grid = bestRatedSection.nextElementSibling;
+    if (!grid || !grid.classList.contains('film-grid')) return;
+    grid.innerHTML = '';
+    // On prend les 6 films suivants (après le meilleur)
+    movies.slice(1, 7).forEach(movie => {
+        grid.appendChild(createMovieElement(movie));
+    });
+    applyDevelop(grid);
+}
+
+// =====================
+// Génération dynamique des sections best-rated-film-1 et 2
+// =====================
+
+/**
+ * Crée dynamiquement une section de films pour un genre donné
+ * @param {string} genre - Le nom du genre à afficher
+ * @param {string} title - Le texte à afficher dans le h1
+ * Correctif de la soutenance
+ */
+
+function createGenderSection(genre, title) {
+    const main = document.querySelector('main');
+    if (!main) return;
+    const section = document.createElement('section');
+    const h1 = document.createElement('h1');
+    h1.textContent = title;
+    h1.setAttribute('data-genre', genre);
+    const grid = document.createElement('div');
+    grid.className = 'film-grid';
+    const btn = document.createElement('button');
+    btn.className = 'voir-plus button';
+    btn.style.display = 'none';
+    btn.textContent = 'Voir plus';
+    section.appendChild(h1);
+    section.appendChild(grid);
+    section.appendChild(btn);
+    const autresSection = main.querySelector('.line-selector')?.closest('section');
+    if (autresSection) {
+        main.insertBefore(section, autresSection);
+    } else {
+        main.appendChild(section);
+    }
+    // Affiche les films pour ce genre
+    displayMovieGender(genre, grid);
 }
 
 
@@ -76,159 +167,28 @@ async function afficherMeilleurFilm() {
  * Affiche les films d'un genre donné dans la grille fournie.
  * @param {string} genre - Le genre à afficher
  * @param {HTMLElement} grid - La grille où afficher les films
+ * Correctif de la soutenance
  */
-async function afficherFilmsParGenre(genre, grid) {
+async function displayMovieGender(genre, grid) {
+    let movies = [];
     try {
-        let url = `${titlesUrl}?genre=${encodeURIComponent(genre)}`;
-        let films = [];
-        let pageCount = 0;
-        const maxPages = 50;
-        while (url && pageCount < maxPages) {
-            const response = await fetch(url);
-            const data = await response.json();
-            films = films.concat(data.results || []);
-            url = data.next;
-            pageCount++;
-        }
-        grid.innerHTML = '';
-        if (!films.length) {
-            grid.innerHTML = `<p>Aucun film trouvé pour ce genre.</p>`;
-            return;
-        }
-        // Limite à 6 films pour chaque catégorie
-        films.slice(0, 6).forEach(movie => {
-            const filmDiv = document.createElement('div');
-            filmDiv.className = 'film';
-
-            const img = document.createElement('img');
-            img.src = movie.image_url;
-            img.alt = movie.title;
-            img.onerror = function() { this.src = '../images/image-not-found.png'; };
-
-            const hoverDiv = document.createElement('div');
-            hoverDiv.className = 'hover';
-
-            const h3 = document.createElement('h3');
-            h3.textContent = movie.title;
-
-            const rightLayout = document.createElement('div');
-            rightLayout.className = 'right-layout';
-
-            const detailsBtn = document.createElement('a');
-            detailsBtn.href = '#';
-            detailsBtn.className = 'button';
-            detailsBtn.setAttribute('data-film-id', movie.id);
-            detailsBtn.textContent = 'Détails';
-            detailsBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                afficherModalFilm(movie.id);
-            });
-
-            rightLayout.appendChild(detailsBtn);
-            hoverDiv.appendChild(h3);
-            hoverDiv.appendChild(rightLayout);
-            filmDiv.appendChild(img);
-            filmDiv.appendChild(hoverDiv);
-            grid.appendChild(filmDiv);
-        });
-        appliquerVoirPlus(grid);
+        const url = `${titlesUrl}?genre=${encodeURIComponent(genre)}&sort_by=-imdb_score&page_size=6`; // Correctif de la soutenance
+        const data = await fetchJson(url);
+        movies = data.results || [];
     } catch (error) {
-        console.error(`Erreur chargement films pour le genre ${genre}:`, error);
+        console.error(`Erreur lors de la récupération des films pour le genre ${genre}:`, error);
+        grid.innerHTML = `<p>Erreur lors du chargement des films.</p>`;
+        return;
     }
-}
-
-
-// Fonction pour remplir toutes les sections par genre
-/**
- * Pour chaque h1[data-genre], affiche les films du genre correspondant dans la grille suivante.
- */
-async function afficherToutesLesSectionsParGenre() {
-    // Sélectionne tous les h1[data-genre] et leur .film-grid suivant
-    document.querySelectorAll('h1[data-genre]').forEach(async h1 => {
-        const genre = h1.getAttribute('data-genre');
-        // Cherche la .film-grid qui suit ce h1
-        let grid = h1.nextElementSibling;
-        if (grid && grid.classList.contains('film-grid')) {
-            await afficherFilmsParGenre(genre, grid);
-        }
+    grid.innerHTML = '';
+    if (!movies.length) {
+        grid.innerHTML = `<p>Aucun film trouvé pour ce genre.</p>`;
+        return;
+    }
+    movies.forEach(movie => {
+        grid.appendChild(createMovieElement(movie));
     });
-}
-
-
-/**
- * Affiche les meilleurs films (note > 7) pour les sections best-rated-film-1 et best-rated-film-2.
- */
-
-
-// Fonction pour afficher les films les mieux notés dans la section dédiée
-async function afficherMeilleursFilms() {
-    const ids = ['best-rated-film-1', 'best-rated-film-2'];
-    for (const id of ids) {
-        const section = document.getElementById(id);
-        if (!section) continue;
-        const genre = section.getAttribute('data-genre');
-        const grid = section.nextElementSibling;
-        if (!grid || !grid.classList.contains('film-grid')) continue;
-        grid.innerHTML = '';
-        let url = titlesUrl;
-        let films = [];
-        let pageCount = 0;
-        const maxPages = 50;
-        while (url && pageCount < maxPages) {
-            let fetchUrl = url;
-            if (genre) {
-                const sep = fetchUrl.includes('?') ? '&' : '?';
-                fetchUrl = `${fetchUrl}${sep}genre=${encodeURIComponent(genre)}`;
-            }
-            const response = await fetch(fetchUrl);
-            const data = await response.json();
-            const pageFilms = (data.results || []);
-            films = films.concat(pageFilms);
-            url = data.next;
-            pageCount++;
-        }
-        if (!films.length) {
-            grid.innerHTML = `<p>Aucun film trouvé.</p>`;
-            continue;
-        }
-        films.sort((a, b) => parseFloat(b.imdb_score) - parseFloat(a.imdb_score));
-        films.slice(0, 6).forEach(movie => {
-            const filmDiv = document.createElement('div');
-            filmDiv.className = 'film';
-
-            const img = document.createElement('img');
-            img.src = movie.image_url;
-            img.alt = movie.title;
-            img.onerror = function() { this.src = '../images/image-not-found.png'; };
-
-            const hoverDiv = document.createElement('div');
-            hoverDiv.className = 'hover';
-
-            const h3 = document.createElement('h3');
-            h3.textContent = movie.title;
-
-            const rightLayout = document.createElement('div');
-            rightLayout.className = 'right-layout';
-
-            const detailsBtn = document.createElement('a');
-            detailsBtn.href = '#';
-            detailsBtn.className = 'button';
-            detailsBtn.setAttribute('data-film-id', movie.id);
-            detailsBtn.textContent = 'Détails';
-            detailsBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                afficherModalFilm(movie.id);
-            });
-
-            rightLayout.appendChild(detailsBtn);
-            hoverDiv.appendChild(h3);
-            hoverDiv.appendChild(rightLayout);
-            filmDiv.appendChild(img);
-            filmDiv.appendChild(hoverDiv);
-            grid.appendChild(filmDiv);
-        });
-        appliquerVoirPlus(grid);
-    }
+    applyDevelop(grid);
 }
 
 
@@ -238,68 +198,67 @@ async function afficherMeilleursFilms() {
 
 /**
  * Affiche la modale avec tous les détails d'un film donné.
- * @param {string|number} filmId - L'identifiant du film à afficher
+ * @param {string|number} movieID - L'identifiant du film à afficher
  */
 
 // Fonction pour afficher le modal avec les infos du film
-async function afficherModalFilm(filmId) {
+async function displayModalMovie(movieID) {
     const modal = document.getElementById('modal-detail');
     if (!modal) return;
     /**
      * Ajoute les actions pour ouvrir et fermer la modale de détails de film.
      */
     modal.style.display = 'block';
-    const titre = modal.querySelector('.modal-film-title');
+    const title = modal.querySelector('.modal-film-title');
     const infos = modal.querySelector('.modal-film-infos');
     const synopsis = modal.querySelector('.modal-film-synopsis');
     const distribution = modal.querySelector('.modal-film-distribution');
     const realisation = modal.querySelector('.realisation');
-    const image = modal.querySelector('.modal-film-image');
-    titre.textContent = '';
+    const picture = modal.querySelector('.modal-film-image');
+    title.textContent = '';
     infos.textContent = '';
     synopsis.textContent = '';
     distribution.textContent = '';
     realisation.textContent = '';
-    image.src = '';
-    image.alt = '';
-    const url = `${titlesUrl}${filmId}`;
+    picture.src = '';
+    picture.alt = '';
+    const url = `${titlesUrl}${movieID}`;
     try {
-        const response = await fetch(url);
-        const film = await response.json();
-        titre.textContent = film.title;
+        const movie = await fetchJson(url);
+        title.textContent = movie.title;
         infos.innerHTML =
-            `Année : ${film.year || 'N/A'}<br>` +
-            `Genres : ${(film.genres || []).join(', ')}<br>` +
-            `Pays d'origine: ${film.countries || '<N/A>'}<br>` +
-            `Classification : ${getAgeRatingFromMovie(film)}<br>` +
-            `Durée : ${film.duration ? film.duration + ' minutes' : 'N/A'}<br>` +
-            `IMDB score : ${film.imdb_score ? film.imdb_score + '/10' : 'N/A'}<br>` +
-            `Recettes au box-office : ${film.worldwide_gross_income ? film.worldwide_gross_income + ' $' : 'N/A'}<br>`;
-        realisation.textContent = film.directors ? `${(film.directors || []).join(', ')}` : '';
-        synopsis.textContent = film.long_description || film.description || '';
-        distribution.textContent = film.actors ? `${(film.actors || []).join(', ')}` : '';
-        image.src = film.image_url || '';
-        image.onerror = function() { this.src = '../images/image-not-found.png'; };
-        image.alt = film.title;
+            `Année : ${movie.year || 'N/A'}<br>` +
+            `Genres : ${(movie.genres || []).join(', ')}<br>` +
+            `Pays d'origine: ${movie.countries || '<N/A>'}<br>` +
+            `Classification : ${getAgeRatingFromMovie(movie)}<br>` +
+            `Durée : ${movie.duration ? movie.duration + ' minutes' : 'N/A'}<br>` +
+            `IMDB score : ${movie.imdb_score ? movie.imdb_score + '/10' : 'N/A'}<br>` +
+            `Recettes au box-office : ${movie.worldwide_gross_income ? movie.worldwide_gross_income + ' $' : 'N/A'}<br>`;
+        realisation.textContent = movie.directors ? `${(movie.directors || []).join(', ')}` : '';
+        synopsis.textContent = movie.long_description || movie.description || '';
+        distribution.textContent = movie.actors ? `${(movie.actors || []).join(', ')}` : '';
+        picture.src = movie.image_url || '';
+        picture.onerror = function() { this.src = '../images/image-not-found.png'; };
+        picture.alt = movie.title;
     } catch (error) {
-        titre.textContent = 'Film introuvable';
+        title.textContent = 'Film introuvable';
         infos.textContent = '';
         synopsis.textContent = '';
         distribution.textContent = '';
         realisation.textContent = '';
-        image.src = '';
-        image.alt = '';
+        picture.src = '';
+        picture.alt = '';
     }
 }
 
 
 // Intercepte le clic sur tous les boutons Détails
-function activerModalsFilms() {
+function activateMoviesModal() {
     document.querySelectorAll('a.button[data-film-id]').forEach(btn => {
         btn.addEventListener('click', function(event) {
             event.preventDefault();
-            const filmId = btn.getAttribute('data-film-id');
-            if (filmId) afficherModalFilm(filmId);
+            const movieID = btn.getAttribute('data-film-id');
+            if (movieID) displayModalMovie(movieID);
         });
     });
     // Ajoute le bouton fermer
@@ -319,20 +278,6 @@ function activerModalsFilms() {
 }
 
 
-/**
- * Ajoute l'attribut data-film-id sur les boutons Détails dans les grilles de films.
- */
-function ajouterDataFilmIdDansGrilles() {
-    document.querySelectorAll('.film-grid .film a.button').forEach(a => {
-        const href = a.getAttribute('href');
-        const match = href && href.match(/id=(\d+)/);
-        if (match) {
-            a.setAttribute('data-film-id', match[1]);
-        }
-    });
-}
-
-
 // =====================
 // 4. Utilitaires d'affichage
 // =====================
@@ -343,7 +288,7 @@ function ajouterDataFilmIdDansGrilles() {
  */
 
 // Fonction utilitaire pour déterminer le nombre de films visibles selon la taille d'écran
-function getNombreFilmsVisibles() {
+function getNumberOfVisibleMovie() {
     if (window.innerWidth <= 600) return 2; // mobile
     if (window.innerWidth <= 900) return 4; // tablette
     return 6; // desktop
@@ -356,55 +301,55 @@ function getNombreFilmsVisibles() {
  */
 
 // Fonction pour masquer les films et gérer les boutons Voir plus / Voir moins
-function appliquerVoirPlus(grid) {
-    const films = Array.from(grid.querySelectorAll('.film'));
-    const nombreVisibles = getNombreFilmsVisibles();
-    let voirPlusBouton = grid.nextElementSibling;
-    if (!voirPlusBouton || !voirPlusBouton.classList.contains('voir-plus')) {
-        voirPlusBouton = document.createElement('button');
-        voirPlusBouton.className = 'voir-plus button';
-        voirPlusBouton.textContent = 'Voir plus';
-        grid.parentNode.insertBefore(voirPlusBouton, grid.nextSibling);
+function applyDevelop(grid) {
+    const movies = Array.from(grid.querySelectorAll('.film'));
+    const nombreVisibles = getNumberOfVisibleMovie();
+    let seeMoreButton = grid.nextElementSibling;
+    if (!seeMoreButton || !seeMoreButton.classList.contains('voir-plus')) {
+        seeMoreButton = document.createElement('button');
+        seeMoreButton.className = 'voir-plus button';
+        seeMoreButton.textContent = 'Voir plus';
+        grid.parentNode.insertBefore(seeMoreButton, grid.nextSibling);
     }
 
     // Récupère l'état actuel du bouton
-    let etat = voirPlusBouton.getAttribute('data-etat') || 'plus';
+    let etat = seeMoreButton.getAttribute('data-etat') || 'plus';
 
-    function afficherRestreint() {
-        films.forEach((film, index) => {
+    function displayLess() {
+        movies.forEach((movie, index) => {
             if (index < nombreVisibles) {
-                film.classList.remove('film-cache');
+                movie.classList.remove('film-cache');
             } else {
-                film.classList.add('film-cache');
+                movie.classList.add('film-cache');
             }
         });        
-        voirPlusBouton.textContent = 'Voir plus';
-        voirPlusBouton.setAttribute('data-etat', 'plus');
-        if (films.length > nombreVisibles){
-            voirPlusBouton.style.display = 'block';
+        seeMoreButton.textContent = 'Voir plus';
+        seeMoreButton.setAttribute('data-etat', 'plus');
+        if (movies.length > nombreVisibles){
+            seeMoreButton.style.display = 'block';
         } else {
-            voirPlusBouton.style.display = 'none';
+            seeMoreButton.style.display = 'none';
         }     
     }
 
-    function afficherTout() {
-        films.forEach(film => film.classList.remove('film-cache'));
-        voirPlusBouton.textContent = 'Voir moins';
-        voirPlusBouton.setAttribute('data-etat', 'moins');
-        voirPlusBouton.style.display = 'block';
+    function displayMore() {
+        movies.forEach(movie => movie.classList.remove('film-cache'));
+        seeMoreButton.textContent = 'Voir moins';
+        seeMoreButton.setAttribute('data-etat', 'moins');
+        seeMoreButton.style.display = 'block';
     }
     // Applique l'état initial
     if (etat === 'moins') {
-        afficherTout();
+        displayMore();
     } else {
-        afficherRestreint();
+        displayLess();
     }
 
-    voirPlusBouton.onclick = function() {
-        if (voirPlusBouton.getAttribute('data-etat') === 'plus') {
-            afficherTout();
+    seeMoreButton.onclick = function() {
+        if (seeMoreButton.getAttribute('data-etat') === 'plus') {
+            displayMore();
         } else {
-            afficherRestreint();
+            displayLess();
         }
     };
 }
@@ -413,7 +358,7 @@ function appliquerVoirPlus(grid) {
 // Réapplique le masquage lors du redimensionnement
 window.addEventListener('resize', () => {
     document.querySelectorAll('.film-grid').forEach(grid => {
-        appliquerVoirPlus(grid);
+        applyDevelop(grid);
     });
 });
 
@@ -439,34 +384,34 @@ function getAgeRatingFromMovie(movie) {
   return "Tous publics";
 }
 
+
 // =====================
 // 5. Gestion des genres (select)
 // =====================
+
 // Charge tous les genres et les ajoute aux selects
-async function chargerTousLesGenres() {
+async function loadAllGender() {
+    let url = genresUrl;
+    let genres = [];
     try {
-        let url = genresUrl;
-        let genres = [];
         while (url) {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Erreur réseau');
-            const data = await response.json();
+            const data = await fetchJson(url);
             genres = genres.concat(data.results || data.genres || []);
             url = data.next;
         }
-        const select1 = document.getElementById('film-selection-1');
-        const select2 = document.getElementById('film-selection-2');
+    } catch (error) {
+        console.error('Erreur lors de la récupération :', error);
+        return;
+    }
+    const select1 = document.getElementById('film-selection-1');
+    if (select1) {
         select1.innerHTML = '<option value="">-- Choisir un genre --</option>';
-        select2.innerHTML = '<option value="">-- Choisir un genre --</option>';
         genres.forEach(genre => {
             const option = document.createElement('option');
             option.value = genre.name || genre;
             option.textContent = genre.name || genre;
             select1.appendChild(option);
-            select2.appendChild(option.cloneNode(true));
         });
-    } catch (error) {
-        console.error('Erreur lors de la récupération :', error);
     }
 }
 
@@ -487,7 +432,7 @@ function addGenreListener(selectId, h1Id) {
             h1.textContent = select.options[select.selectedIndex].textContent;
             h1.setAttribute('data-genre', select.value);
             if (grid && grid.classList.contains('film-grid')) {
-                await afficherFilmsParGenre(select.value, grid);
+                await displayMovieGender(select.value, grid);
             }
         } else {
             h1.textContent = "Autres";
@@ -499,22 +444,6 @@ function addGenreListener(selectId, h1Id) {
     });
 }
 
-
-/**
- * Synchronise immédiatement l'attribut data-genre des h1 ciblés avec leur texte,
- * puis active un MutationObserver pour maintenir la synchronisation en temps réel.
- */
-function synchroniserEtObserverDataGenre() {
-    var ids = ['best-rated-film-1', 'best-rated-film-2'];
-    for (var i = 0; i < ids.length; i++) {
-        var h1 = document.getElementById(ids[i]);
-        if (h1) {
-            h1.setAttribute('data-genre', h1.textContent.trim());
-            // Pas d'observateur, juste une synchronisation simple
-        }
-    }
-}
-
 // =====================
 // 6. Initialisation globale
 // =====================
@@ -523,18 +452,16 @@ function synchroniserEtObserverDataGenre() {
  * Fonction principale appelée au chargement de la page. Initialise tout le site.
  */
 
-
-async function affichageComplet() {
-    await chargerTousLesGenres();
-    synchroniserEtObserverDataGenre();
-    await afficherMeilleurFilm();
-    await afficherMeilleursFilms();
-    await afficherToutesLesSectionsParGenre();
-    ajouterDataFilmIdDansGrilles();
-    activerModalsFilms();
+async function displayAll() {
+    await loadAllGender();
+    await displayBestMovie();
+    await displayBestRatedMovies();
+    // Génération dynamique des deux sections genres fixes tel que vu lors de la soutenance
+    createGenderSection('Sci-Fi', 'Sci-Fi');
+    createGenderSection('Mystery', 'Mystery');
+    activateMoviesModal();
 }
 
 
-document.addEventListener('DOMContentLoaded', affichageComplet);
+document.addEventListener('DOMContentLoaded', displayAll);
 addGenreListener('film-selection-1', 'autres-1');
-addGenreListener('film-selection-2', 'autres-2');
