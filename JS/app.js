@@ -125,7 +125,7 @@ async function displayBestRatedMovies() {
 }
 
 // =====================
-// Génération dynamique des sections best-rated-film-1 et 2
+// 3. Génération dynamique des sections best-rated-film-1 et 2
 // =====================
 
 /**
@@ -193,7 +193,7 @@ async function displayMovieGender(genre, grid) {
 
 
 // =====================
-// 3. Modale d'affichage des détails d'un film
+// 4. Modale d'affichage des détails d'un film
 // =====================
 
 /**
@@ -279,7 +279,7 @@ function activateMoviesModal() {
 
 
 // =====================
-// 4. Utilitaires d'affichage
+// 5. Utilitaires d'affichage
 // =====================
 
 /**
@@ -386,7 +386,7 @@ function getAgeRatingFromMovie(movie) {
 
 
 // =====================
-// 5. Gestion des genres (select)
+// 6. Gestion des genres (select)
 // =====================
 
 // Charge tous les genres et les ajoute aux selects
@@ -445,7 +445,7 @@ function addGenreListener(selectId, h1Id) {
 }
 
 // =====================
-// 6. Initialisation globale
+// 7. Initialisation globale
 // =====================
 
 /**
