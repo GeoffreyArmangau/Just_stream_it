@@ -6,7 +6,6 @@ const genresUrl = 'http://localhost:8000/api/v1/genres';
 
 // =====================
 // Fonction utilitaire pour fetch + json + gestion erreur pour eviter le DRY
-// Correctif de la soutenance
 
 async function fetchJson(url) {
     const response = await fetch(url);
@@ -16,7 +15,6 @@ async function fetchJson(url) {
 
 // =====================
 // Fonction utilitaire pour créer un bloc film DOM
-// Correctif de la soutenance
 function createMovieElement(movie) {
     const movieDiv = document.createElement('div');
     movieDiv.className = 'film';
@@ -62,9 +60,8 @@ function createMovieElement(movie) {
  */
 
 // Nouvelle fonction pour récupérer les 7 meilleurs films (triés par score)
-// Correctif de la soutenance
 async function loadTopMovies() {
-    const url = `${titlesUrl}?sort_by=-imdb_score&page_size=7`; // Correctif de la soutenance
+    const url = `${titlesUrl}?sort_by=-imdb_score&page_size=7`; 
     try {
         const data = await fetchJson(url);
         return data.results || [];
@@ -109,7 +106,6 @@ async function displayBestMovie() {
 }
 
 // Affiche les 6 films suivants dans la section "Films les mieux notés"
-// Correctif de la soutenance
 async function displayBestRatedMovies() {
     const movies = await loadTopMovies();
     const bestRatedSection = document.getElementById('best-rated-film');
@@ -172,7 +168,7 @@ function createGenderSection(genre, title) {
 async function displayMovieGender(genre, grid) {
     let movies = [];
     try {
-        const url = `${titlesUrl}?genre=${encodeURIComponent(genre)}&sort_by=-imdb_score&page_size=6`; // Correctif de la soutenance
+        const url = `${titlesUrl}?genre=${encodeURIComponent(genre)}&sort_by=-imdb_score&page_size=6`; 
         const data = await fetchJson(url);
         movies = data.results || [];
     } catch (error) {
